@@ -85,6 +85,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves a User from the MongoDB database by user id.
+     *
+     * @param userId the user id of the user.
+     * @return the User object with the provided user id.
+     * @throws IllegalArgumentException if no user with the provided user id exists.
+     */
     public User getUser(ObjectId userId) throws IllegalArgumentException {
         try {
             return getUser("_id", userId);
@@ -93,6 +100,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves a User from the MongoDB database by a field name and value.
+     *
+     * @param fieldName the name of the field to search by.
+     * @param value the value of the field to search by.
+     * @return the User object with the provided field name and value.
+     * @throws IllegalArgumentException if no user with the provided field name and value exists.
+     */
     private User getUser(String fieldName, Object value) throws IllegalArgumentException {
         MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
@@ -101,10 +116,24 @@ public class UserController {
         return new User(user);
     }
 
+    /**
+     * Retrieves a User's id from the MongoDB database by username.
+     *
+     * @param username the username of the user.
+     * @return the user id of the user with the provided username.
+     * @throws IllegalArgumentException if no user with the provided username exists.
+     */
     public ObjectId getUserId(String username) throws IllegalArgumentException {
         return getUser(username).id();
     }
 
+    /**
+     * Retrieves a User's username from the MongoDB database by user id.
+     *
+     * @param userId the user id of the user.
+     * @return the username of the user with the provided user id.
+     * @throws IllegalArgumentException if no user with the provided user id exists.
+     */
     public String getUsername(ObjectId userId) throws IllegalArgumentException {
         return getUser(userId).username();
     }

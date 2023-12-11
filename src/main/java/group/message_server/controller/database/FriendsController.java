@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  * It provides methods for adding, retrieving, updating, and deleting friends.
  */
 public class FriendsController {
+    // name of friends collection in database
     private static final String FRIENDS_COLLECTION_NAME = "friends";
     private static final DatabaseController databaseController = DatabaseController.getInstance();
 

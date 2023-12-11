@@ -1,5 +1,6 @@
 package group.message_server.controller.api;
 
+import group.message_server.controller.database.FriendsController;
 import group.message_server.controller.database.MessageController;
 import group.message_server.controller.database.UserController;
 import model.Message;
@@ -19,10 +20,14 @@ public class MessageAPI {
                                               @RequestParam String message) {
         var mc = new MessageController();
         var uc = new UserController();
+        var fc = new FriendsController();
 
         try {
             ObjectId senderId = uc.getUserId(sender);
             ObjectId recipientId = uc.getUserId(recipient);
+            if (!fc.areFriends(senderId, recipientId)) {
+                return ResponseEntity.badRequest().body("You must be friends to send a message");
+            }
             mc.sendMessage(senderId, recipientId, message);
             return ResponseEntity.ok("Message sent");
         } catch (IllegalArgumentException e) {
