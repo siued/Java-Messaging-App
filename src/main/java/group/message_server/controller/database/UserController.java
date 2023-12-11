@@ -14,10 +14,21 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * UserController class is responsible for managing User objects in the MongoDB database.
+ * It provides methods for adding, retrieving, updating, and deleting users.
+ */
 public class UserController {
+    // Name of collection in MongoDB database
     private static final String USERS_COLLECTION_NAME = "users";
 
-    public void addUser(User user) {
+    /**
+     * Adds a new User to the MongoDB database.
+     *
+     * @param user the User object to be added to the database.
+     * @throws IllegalArgumentException if a user with the same username already exists.
+     */
+    public void addUser(User user) throws IllegalArgumentException {
         MongoDatabase database = DatabaseController.getInstance().getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
 
@@ -33,6 +44,15 @@ public class UserController {
         collection.insertOne(doc);
     }
 
+    /**
+     * Attempts to log in a user with the provided username and password.
+     * If the username and password match an existing user, the user's last login date is updated and the method returns true.
+     * If no matching user is found, the method returns false.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @return true if the login was successful, false otherwise.
+     */
     public boolean loginUser(String username, String password) {
         // TODO implement proper security
         try {
@@ -41,12 +61,21 @@ public class UserController {
                 //update last login
                 updateField(username, "last_login_at", new Date());
                 return true;
-            };
-        } catch (IllegalArgumentException ignored) {}
+            }
+        } catch (IllegalArgumentException ignored) {
+            // incorrect username, login failed
+        }
         return false;
     }
 
-    public User getUser(String username) {
+    /**
+     * Retrieves a User from the MongoDB database by username.
+     *
+     * @param username the username of the user.
+     * @return the User object with the provided username.
+     * @throws IllegalArgumentException if no user with the provided username exists.
+     */
+    public User getUser(String username) throws IllegalArgumentException {
         MongoDatabase database = DatabaseController.getInstance().getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
         Document user = collection.find(Filters.eq("username", username)).first();
@@ -54,7 +83,16 @@ public class UserController {
         return new User(user);
     }
 
-    public boolean updateField(String username, String fieldName, Object value) {
+    /**
+     * Updates a field of a User in the MongoDB database.
+     *
+     * @param username the username of the user.
+     * @param fieldName the name of the field to be updated.
+     * @param value the new value for the field.
+     * @return true if the update was successful, false otherwise.
+     * @throws IllegalArgumentException if the provided field name does not exist in the User class.
+     */
+    public boolean updateField(String username, String fieldName, Object value) throws IllegalArgumentException {
 
         //check if field name is valid
         Field[] userFields = User.class.getDeclaredFields();
@@ -71,6 +109,11 @@ public class UserController {
         return result.getModifiedCount() > 0;
     }
 
+    /**
+     * Retrieves all Users from the MongoDB database.
+     *
+     * @return a List of User objects.
+     */
     public List<User> getUsers() {
         MongoDatabase database = DatabaseController.getInstance().getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
@@ -81,12 +124,20 @@ public class UserController {
         return users;
     }
 
+    /**
+     * Deletes a User from the MongoDB database by username.
+     *
+     * @param username the username of the user to be deleted.
+     */
     public void deleteUser(String username) {
         MongoDatabase database = DatabaseController.getInstance().getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
         collection.deleteOne(Filters.eq("username", username));
     }
 
+    /**
+     * Deletes all Users from the MongoDB database.
+     */
     public void deleteAllUsers() {
         MongoDatabase database = DatabaseController.getInstance().getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);

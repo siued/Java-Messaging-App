@@ -1,4 +1,4 @@
-package group.message_server.api;
+package group.message_server.controller.api;
 
 import group.message_server.controller.database.DatabaseController;
 import group.message_server.controller.database.UserController;
