@@ -50,8 +50,8 @@ public class UserControllerTests {
 
     @Test
     public void updateFieldSuccessfullyUpdatesField() {
-        when(userController.updateField("test", "password_hash", "new_password")).thenReturn(true);
-        assertTrue(userController.updateField("test", "password_hash", "new_password"));
+        when(userController.updateField("test", "passwordHash", "new_password")).thenReturn(true);
+        assertTrue(userController.updateField("test", "passwordHash", "new_password"));
     }
 
     @Test

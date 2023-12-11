@@ -1,19 +1,70 @@
 package model;
 
-public record FriendRecord(int user1_id,
-                           int user2_id) {
+import lombok.Getter;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
-    public boolean contains(int user_id) {
-        return user1_id == user_id || user2_id == user_id;
+public class FriendRecord {
+    @Getter
+    private ObjectId userId;
+    @Getter
+    private ObjectId friendId;
+    private Status status;
+
+    private enum Status {
+        PENDING,
+        ACCEPTED,
+        DECLINED
     }
 
-    public int other(int user_id) {
-        if (user1_id == user_id) {
-            return user2_id;
-        } else if (user2_id == user_id) {
-            return user1_id;
+    private FriendRecord(ObjectId userId, ObjectId friendId, Status status) {
+        this.userId = userId;
+        this.friendId = friendId;
+        this.status = status;
+    }
+
+    public FriendRecord(ObjectId userId, ObjectId friendId) {
+        this(userId, friendId, Status.PENDING);
+    }
+
+    public FriendRecord(Document document) {
+        this(document.getObjectId("userId"),
+                document.getObjectId("friendId"),
+                Status.valueOf(document.getString("status")));
+    }
+
+    public Document toDocument() {
+        return new Document("userId", userId)
+                .append("friendId", friendId)
+                .append("status", status.toString());
+    }
+
+    public boolean contains(ObjectId userId) {
+        return this.userId.equals(userId) || friendId.equals(userId);
+    }
+
+    public boolean isAccepted() {
+        return status == Status.ACCEPTED;
+    }
+
+    public boolean isRejected() {
+        return status == Status.DECLINED;
+    }
+
+    public void accept() {
+        if (status != Status.PENDING) {
+            throw new IllegalStateException("Friend request is not pending");
+        }
+        status = Status.ACCEPTED;
+    }
+
+    public ObjectId other(ObjectId userId) {
+        if (this.userId == userId) {
+            return friendId;
+        } else if (friendId == userId) {
+            return this.userId;
         } else {
-            throw new IllegalArgumentException("user_id " + user_id + " is not in this Friend_record");
+            throw new IllegalArgumentException("User Id " + userId + " is not in this friend record");
         }
     }
 }

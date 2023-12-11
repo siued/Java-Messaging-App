@@ -40,9 +40,9 @@ public class UserController {
         }
 
         Document doc = new Document("username", user.username())
-                .append("password_hash", user.password_hash())
-                .append("created_at", user.created_at())
-                .append("last_login_at", user.last_login_at());
+                .append("passwordHash", user.passwordHash())
+                .append("createdAt", user.createdAt())
+                .append("lastLoginAt", user.lastLoginAt());
         collection.insertOne(doc);
     }
 
@@ -59,9 +59,9 @@ public class UserController {
         // TODO implement proper security
         try {
             User user = getUser(username);
-            if (password.equals(user.password_hash())) {
+            if (password.equals(user.passwordHash())) {
                 //update last login
-                updateField(username, "last_login_at", new Date());
+                updateField(username, "lastLoginAt", new Date());
                 return true;
             }
         } catch (IllegalArgumentException ignored) {

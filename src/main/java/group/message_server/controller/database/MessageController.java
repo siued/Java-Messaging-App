@@ -33,38 +33,49 @@ public class MessageController {
                 .insertOne(message);
     }
 
-    public List<Message> getUnreadMessages(ObjectId recipientId) {
-        return getMessages(recipientId, false);
+    public List<Message> getUnreadReceivedMessages(ObjectId recipientId) {
+        return getReceivedMessages(recipientId, false);
     }
 
-    public List<Message> getMessages(ObjectId recipientId) {
-        return getMessages(recipientId, true);
+    public List<Message> getReceivedMessages(ObjectId recipientId) {
+        return getReceivedMessages(recipientId, true);
     }
 
     public void setDelivered(List<Message> messages) {
         for (Message message : messages) {
-            setDelivered(message.id());
+            if (!message.isDelivered()) {
+                setDelivered(message.id());
+            }
         }
     }
 
     private void setDelivered(ObjectId messageId) {
         Bson filter = Filters.eq("_id", messageId);
-        Bson update = Updates.set("delivered_at", new Date());
+        Bson update = Updates.set("deliveredAt", new Date());
 
         databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)
                 .updateOne(filter, update);
     }
 
-    private List<Message> getMessages(ObjectId recipientId, boolean delivered) {
+    private List<Message> getReceivedMessages(ObjectId recipientId, boolean delivered) {
         Bson filter;
         if (delivered) {
             filter = Filters.and(
-                    Filters.eq("recipient_id", recipientId),
-                    Filters.eq("delivered_at", null));
+                    Filters.eq("recipientId", recipientId),
+                    Filters.eq("deliveredAt", null));
         } else {
-            filter = Filters.eq("recipient_id", recipientId);
+            filter = Filters.eq("recipientId", recipientId);
         }
+
+        return databaseController.getDatabase()
+                .getCollection(MESSAGES_COLLECTION_NAME)
+                .find(filter)
+                .map(Message::new).into(new ArrayList<>());
+    }
+
+    public List<Message> getSentMessages(ObjectId senderId) {
+        Bson filter = Filters.eq("senderId", senderId);
 
         return databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)

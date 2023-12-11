@@ -7,10 +7,10 @@ import java.util.Date;
 
 public record Message(ObjectId id,
                       String body,
-                      ObjectId sender_id,
-                      ObjectId recipient_id,
-                      Date created_at,
-                      Date delivered_at) {
+                      ObjectId senderId,
+                      ObjectId recipientId,
+                      Date createdAt,
+                      Date deliveredAt) {
 
     public Message {
         if (body == null || body.isBlank()) {
@@ -19,24 +19,24 @@ public record Message(ObjectId id,
     }
 
     public boolean isDelivered() {
-        return delivered_at != null;
+        return deliveredAt != null;
     }
 
     public Message(Document document) {
         this(document.getObjectId("_id"),
                 document.getString("body"),
-                document.getObjectId("sender_id"),
-                document.getObjectId("recipient_id"),
-                document.getDate("created_at"),
-                document.getDate("delivered_at"));
+                document.getObjectId("senderId"),
+                document.getObjectId("recipientId"),
+                document.getDate("createdAt"),
+                document.getDate("deliveredAt"));
     }
 
     public Document toDocument() {
         Document document = new Document("body", body)
-                .append("sender_id", sender_id)
-                .append("recipient_id", recipient_id)
-                .append("created_at", created_at)
-                .append("delivered_at", delivered_at);
+                .append("senderId", senderId)
+                .append("recipientId", recipientId)
+                .append("createdAt", createdAt)
+                .append("deliveredAt", deliveredAt);
         if (id != null) {
             document.append("_id", id);
         }

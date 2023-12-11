@@ -19,7 +19,7 @@ public class Test {
 
         System.out.println(uc.getUsers());
 
-        uc.updateField(username, "last_login_at", new Date(10000));
+        uc.updateField(username, "lastLoginAt", new Date(10000));
 
         System.out.println(uc.getUsers());
 

@@ -15,9 +15,9 @@ public class UserTests {
     public void userConstructorWithUsernameAndPasswordSetsCorrectFields() {
         User user = new User("test", "test");
         assertEquals("test", user.username());
-        assertEquals("test", user.password_hash());
-        assertNotNull(user.created_at());
-        assertNotNull(user.last_login_at());
+        assertEquals("test", user.passwordHash());
+        assertNotNull(user.createdAt());
+        assertNotNull(user.lastLoginAt());
         assertNull(user.id());
     }
 
@@ -26,17 +26,17 @@ public class UserTests {
         ObjectId id = new ObjectId();
         Document document = new Document("_id", id)
                 .append("username", "test")
-                .append("password_hash", "test")
-                .append("created_at", new Date())
-                .append("last_login_at", new Date());
+                .append("passwordHash", "test")
+                .append("createdAt", new Date())
+                .append("lastLoginAt", new Date());
 
         User user = new User(document);
 
         assertEquals(id, user.id());
         assertEquals("test", user.username());
-        assertEquals("test", user.password_hash());
-        assertNotNull(user.created_at());
-        assertNotNull(user.last_login_at());
+        assertEquals("test", user.passwordHash());
+        assertNotNull(user.createdAt());
+        assertNotNull(user.lastLoginAt());
     }
 
     @Test
@@ -49,9 +49,9 @@ public class UserTests {
 
         assertEquals(id, user.id());
         assertEquals("test", user.username());
-        assertEquals("test", user.password_hash());
-        assertEquals(createdAt, user.created_at());
-        assertEquals(lastLoginAt, user.last_login_at());
+        assertEquals("test", user.passwordHash());
+        assertEquals(createdAt, user.createdAt());
+        assertEquals(lastLoginAt, user.lastLoginAt());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class UserTests {
 
         assertEquals(id, document.getObjectId("_id"));
         assertEquals("test", document.getString("username"));
-        assertEquals("test", document.getString("password_hash"));
-        assertEquals(createdAt, document.getDate("created_at"));
-        assertEquals(lastLoginAt, document.getDate("last_login_at"));
+        assertEquals("test", document.getString("passwordHash"));
+        assertEquals(createdAt, document.getDate("createdAt"));
+        assertEquals(lastLoginAt, document.getDate("lastLoginAt"));
     }
 }
