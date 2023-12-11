@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * DatabaseController class is responsible for managing the MongoDB database.
  * It is a singleton class.
- * It provides methods for retrieving the database and the UserController.
+ * It provides methods for retrieving the database.
  */
 public class DatabaseController {
     private static final String DATABASE_NAME = "messageDatabase";
