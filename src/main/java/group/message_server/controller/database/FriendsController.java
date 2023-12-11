@@ -23,8 +23,8 @@ public class FriendsController {
     /**
      * Returns true if the two users are friends, false otherwise.
      *
-     * @param userId
-     * @param user2Id
+     * @param userId first user to check
+     * @param user2Id second user to check
      * @return true if the two users are friends, false otherwise.
      */
     public boolean areFriends(ObjectId userId, ObjectId user2Id) {
@@ -90,8 +90,8 @@ public class FriendsController {
     /**
      * Returns the FriendRecord object for the two users if one exists, null otherwise
      *
-     * @param userId
-     * @param user2Id
+     * @param userId the id of one of the users
+     * @param user2Id the id of the other user
      * @return the FriendRecord object for the two users if one exists, null otherwise
      */
     private FriendRecord getFriendRecord(ObjectId userId, ObjectId user2Id) {

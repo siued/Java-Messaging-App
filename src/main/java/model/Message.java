@@ -16,6 +16,10 @@ public record Message(ObjectId id,
         if (body == null || body.isBlank()) {
             throw new IllegalArgumentException("Message body cannot be null or blank");
         }
+
+        if (senderId.equals(recipientId)) {
+            throw new IllegalArgumentException("Cannot send message to self");
+        }
     }
 
     public boolean isDelivered() {

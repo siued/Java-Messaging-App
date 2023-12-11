@@ -28,10 +28,6 @@ public class MessageController {
      * @param body body of the message
      */
     public void sendMessage(ObjectId senderId, ObjectId recipientId, String body) throws IllegalArgumentException {
-        if (senderId.equals(recipientId)) {
-            throw new IllegalArgumentException("Cannot send message to self");
-        }
-
         Date date = new Date();
 
         Document message = new Message(

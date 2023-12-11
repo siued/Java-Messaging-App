@@ -1,6 +1,5 @@
 package group.message_server.controller.api;
 
-import group.message_server.controller.database.DatabaseController;
 import group.message_server.controller.database.FriendsController;
 import group.message_server.controller.database.UserController;
 import model.User;
@@ -30,12 +29,23 @@ public class UserAPI {
     }
 
     @PutMapping("/addFriend")
-    public ResponseEntity<String> addFriend(@RequestParam String username, @RequestParam String friendname) {
+    public ResponseEntity<String> addFriend(@RequestParam String username, @RequestParam String friendName) {
         UserController uc = new UserController();
         FriendsController fc = new FriendsController();
         try {
-            fc.addFriend(uc.getUserId(username), uc.getUserId(friendname));
+            fc.addFriend(uc.getUserId(username), uc.getUserId(friendName));
             return ResponseEntity.ok("Friend added");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("friends")
+    public ResponseEntity<?> getFriends(@RequestParam String username) {
+        UserController uc = new UserController();
+        FriendsController fc = new FriendsController();
+        try {
+            return ResponseEntity.ok(fc.getFriends(uc.getUserId(username)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
