@@ -13,7 +13,7 @@ public class Test {
 
         User user = new User(username, "test", new Date(), new Date());
 
-        UserController uc = dbController.getUserController();
+        UserController uc = new UserController();
 
         uc.addUser(user);
 

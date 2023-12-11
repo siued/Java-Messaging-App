@@ -14,6 +14,15 @@ public record User(ObjectId id,
                    Date created_at,
                    Date last_login_at) {
 
+    public User {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username cannot be null or blank");
+        }
+        if (password_hash == null || password_hash.isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or blank");
+        }
+    }
+
     /**
      * Constructs a User object with the provided username, password, creation date and last login date.
      * The id is set to null.

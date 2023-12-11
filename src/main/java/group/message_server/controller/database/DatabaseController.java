@@ -11,10 +11,10 @@ import com.mongodb.client.MongoDatabase;
  */
 public class DatabaseController {
     private static final String DATABASE_NAME = "messageDatabase";
+
     private static DatabaseController instance = null;
     private final MongoClient mongoClient;
     private final MongoDatabase database;
-    private final UserController userController;
 
     /**
      * Constructs a new DatabaseController object.
@@ -22,7 +22,6 @@ public class DatabaseController {
     private DatabaseController() {
         mongoClient = MongoClients.create("mongodb://localhost:27017");
         database = mongoClient.getDatabase(DATABASE_NAME);
-        userController = new UserController();
     }
 
     /**
@@ -44,14 +43,5 @@ public class DatabaseController {
      */
     public MongoDatabase getDatabase() {
         return database;
-    }
-
-    /**
-     * Returns the UserController object.
-     *
-     * @return the UserController object.
-     */
-    public UserController getUserController() {
-        return userController;
     }
 }

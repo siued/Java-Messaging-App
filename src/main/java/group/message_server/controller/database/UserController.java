@@ -7,6 +7,7 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import model.User;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -19,8 +20,9 @@ import java.util.List;
  * It provides methods for adding, retrieving, updating, and deleting users.
  */
 public class UserController {
-    // Name of collection in MongoDB database
+    // Name of user collection in MongoDB database
     private static final String USERS_COLLECTION_NAME = "users";
+    private static final DatabaseController dbController = DatabaseController.getInstance();
 
     /**
      * Adds a new User to the MongoDB database.
@@ -29,7 +31,7 @@ public class UserController {
      * @throws IllegalArgumentException if a user with the same username already exists.
      */
     public void addUser(User user) throws IllegalArgumentException {
-        MongoDatabase database = DatabaseController.getInstance().getDatabase();
+        MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
 
         //check unique username
@@ -76,11 +78,15 @@ public class UserController {
      * @throws IllegalArgumentException if no user with the provided username exists.
      */
     public User getUser(String username) throws IllegalArgumentException {
-        MongoDatabase database = DatabaseController.getInstance().getDatabase();
+        MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
         Document user = collection.find(Filters.eq("username", username)).first();
         if (user == null) throw new IllegalArgumentException("Username doesn't exist");
         return new User(user);
+    }
+
+    public ObjectId getUserId(String username) throws IllegalArgumentException {
+        return getUser(username).id();
     }
 
     /**
@@ -100,7 +106,7 @@ public class UserController {
             throw new IllegalArgumentException("Invalid field name!");
         }
 
-        MongoDatabase database = DatabaseController.getInstance().getDatabase();
+        MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
 
         UpdateResult result = collection.updateOne(Filters.eq("username", username),
@@ -115,7 +121,7 @@ public class UserController {
      * @return a List of User objects.
      */
     public List<User> getUsers() {
-        MongoDatabase database = DatabaseController.getInstance().getDatabase();
+        MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
         List<User> users = new ArrayList<>();
         for (Document doc : collection.find()) {
@@ -130,7 +136,7 @@ public class UserController {
      * @param username the username of the user to be deleted.
      */
     public void deleteUser(String username) {
-        MongoDatabase database = DatabaseController.getInstance().getDatabase();
+        MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
         collection.deleteOne(Filters.eq("username", username));
     }
@@ -139,7 +145,7 @@ public class UserController {
      * Deletes all Users from the MongoDB database.
      */
     public void deleteAllUsers() {
-        MongoDatabase database = DatabaseController.getInstance().getDatabase();
+        MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
         collection.deleteMany(new Document());
     }

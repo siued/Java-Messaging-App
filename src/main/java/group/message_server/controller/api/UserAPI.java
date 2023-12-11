@@ -19,7 +19,7 @@ public class UserAPI {
     @PostMapping("/new")
     public ResponseEntity<String> registerUser(@RequestParam(name="username") String username,
                                           @RequestParam(name="password") String password) {
-        UserController uc = DatabaseController.getInstance().getUserController();
+        UserController uc = new UserController();
         User user = new User(username, password);
         try {
             uc.addUser(user);
