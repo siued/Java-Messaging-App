@@ -1,6 +1,7 @@
 package group.message_server.controller.api;
 
 import group.message_server.controller.database.DatabaseController;
+import group.message_server.controller.database.FriendsController;
 import group.message_server.controller.database.UserController;
 import model.User;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,18 @@ public class UserAPI {
         try {
             uc.addUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/addFriend")
+    public ResponseEntity<String> addFriend(@RequestParam String username, @RequestParam String friendname) {
+        UserController uc = new UserController();
+        FriendsController fc = new FriendsController();
+        try {
+            fc.addFriend(uc.getUserId(username), uc.getUserId(friendname));
+            return ResponseEntity.ok("Friend added");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -2,19 +2,42 @@ package group.message_server.controller.database;
 
 import com.mongodb.client.model.Filters;
 import model.FriendRecord;
+import model.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * FriendsController class is responsible for managing FriendRecord objects in the MongoDB database.
+ * It provides methods for adding, retrieving, updating, and deleting friends.
+ */
 public class FriendsController {
     private static final String FRIENDS_COLLECTION_NAME = "friends";
     private static final DatabaseController databaseController = DatabaseController.getInstance();
 
 
+    /**
+     * Returns true if the two users are friends, false otherwise.
+     *
+     * @param userId
+     * @param user2Id
+     * @return true if the two users are friends, false otherwise.
+     */
     public boolean areFriends(ObjectId userId, ObjectId user2Id) {
         FriendRecord record = getFriendRecord(userId, user2Id);
         return record != null && record.isAccepted();
     }
 
+    /**
+     * Adds a friend request from userId to friendId.
+     *
+     * @param userId the user sending the friend request.
+     * @param friendId the user receiving the friend request.
+     * @throws IllegalArgumentException if the friend request has already been sent, accepted, or rejected.
+     */
     public void addFriend(ObjectId userId, ObjectId friendId) throws IllegalArgumentException {
         FriendRecord record = getFriendRecord(userId, friendId);
         if (record == null) {
@@ -35,6 +58,11 @@ public class FriendsController {
         }
     }
 
+    /**
+     * Accepts a friend request from userId to friendId.
+     *
+     * @param record the friend request to accept.
+     */
     private void acceptFriendRequest(FriendRecord record) {
         record.accept();
         Document filter = new Document("userId", record.getUserId())
@@ -45,6 +73,12 @@ public class FriendsController {
                 .updateOne(filter, update);
     }
 
+    /**
+     * Creates a friend request from userId to friendId.
+     *
+     * @param userId the user sending the friend request.
+     * @param friendId the user receiving the friend request.
+     */
     private void createFriendRecord(ObjectId userId, ObjectId friendId) {
         Document friendRecord = new FriendRecord(userId, friendId).toDocument();
         databaseController.getDatabase()
@@ -52,25 +86,51 @@ public class FriendsController {
                 .insertOne(friendRecord);
     }
 
-
-    private FriendRecord getFriendRecord(ObjectId userId, ObjectId friendId) {
-        Document document = databaseController.getDatabase()
-                .getCollection(FRIENDS_COLLECTION_NAME)
-                .find(
-                        Filters.or(
-                                Filters.and(
-                                        Filters.eq("user_id", userId),
-                                        Filters.eq("friend_id", friendId)
-                                ),
-                                Filters.and(
-                                        Filters.eq("user_id", friendId),
-                                        Filters.eq("friend_id", userId)
-                                )
-                        )
-                ).first();
-        if (document == null) {
-            return null;
+    /**
+     * Returns the FriendRecord object for the two users if one exists, null otherwise
+     *
+     * @param userId
+     * @param user2Id
+     * @return the FriendRecord object for the two users if one exists, null otherwise
+     */
+    private FriendRecord getFriendRecord(ObjectId userId, ObjectId user2Id) {
+        List<FriendRecord> records = getFriendRecords(userId);
+        for (FriendRecord record : records) {
+            if (record.contains(user2Id)) {
+                return record;
+            }
         }
-        return new FriendRecord(document);
+        return null;
+    }
+
+    /**
+     * Returns a list of all Users that are friends with the user with the provided userId.
+     *
+     * @param userId the id of the user whose friends are to be retrieved.
+     * @return a list of User objects that are friends with the user with the provided userId.
+     */
+    public List<User> getFriends(ObjectId userId) {
+        UserController uc = new UserController();
+        List<FriendRecord> records = getFriendRecords(userId);
+
+        return records.stream()
+            .filter(FriendRecord::isAccepted)
+            .map(record -> uc.getUser(record.other(userId)))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns all friend requests containing the user with the given userId
+     *
+     * @param userId the id of the user whose friend requests are to be retrieved.
+     * @return a list of FriendRecord objects containing the user with the given userId
+     */
+    private List<FriendRecord> getFriendRecords(ObjectId userId) {
+        return databaseController.getDatabase()
+                .getCollection(FRIENDS_COLLECTION_NAME)
+                .find(Filters.or(
+                        Filters.eq("user_id", userId),
+                        Filters.eq("friend_id", userId)
+                )).map(FriendRecord::new).into(new ArrayList<>());
     }
 }

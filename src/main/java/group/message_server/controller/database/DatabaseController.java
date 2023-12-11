@@ -3,6 +3,7 @@ package group.message_server.controller.database;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import lombok.Getter;
 
 /**
  * DatabaseController class is responsible for managing the MongoDB database.
@@ -11,9 +12,9 @@ import com.mongodb.client.MongoDatabase;
  */
 public class DatabaseController {
     private static final String DATABASE_NAME = "messageDatabase";
-
     private static DatabaseController instance = null;
     private final MongoClient mongoClient;
+    @Getter
     private final MongoDatabase database;
 
     /**
@@ -34,14 +35,5 @@ public class DatabaseController {
             instance = new DatabaseController();
         }
         return instance;
-    }
-
-    /**
-     * Returns the MongoDatabase object.
-     *
-     * @return the MongoDatabase object.
-     */
-    public MongoDatabase getDatabase() {
-        return database;
     }
 }

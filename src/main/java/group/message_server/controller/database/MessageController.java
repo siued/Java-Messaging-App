@@ -17,6 +17,13 @@ public class MessageController {
     private static final DatabaseController databaseController = DatabaseController.getInstance();
 
     public void sendMessage(ObjectId senderId, ObjectId recipientId, String body) {
+        if (senderId.equals(recipientId)) {
+            throw new IllegalArgumentException("Cannot send message to self");
+        }
+        if (!new FriendsController().areFriends(senderId, recipientId)) {
+            throw new IllegalArgumentException("Users are not friends");
+        }
+
         Date date = new Date();
 
         Document message = new Message(

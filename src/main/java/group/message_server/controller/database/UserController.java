@@ -78,15 +78,35 @@ public class UserController {
      * @throws IllegalArgumentException if no user with the provided username exists.
      */
     public User getUser(String username) throws IllegalArgumentException {
+        try {
+            return getUser("username", username);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("User with that user name doesn't exist");
+        }
+    }
+
+    public User getUser(ObjectId userId) throws IllegalArgumentException {
+        try {
+            return getUser("_id", userId);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("User with that user id doesn't exist");
+        }
+    }
+
+    private User getUser(String fieldName, Object value) throws IllegalArgumentException {
         MongoDatabase database = dbController.getDatabase();
         MongoCollection<Document> collection = database.getCollection(USERS_COLLECTION_NAME);
-        Document user = collection.find(Filters.eq("username", username)).first();
-        if (user == null) throw new IllegalArgumentException("Username doesn't exist");
+        Document user = collection.find(Filters.eq(fieldName, value)).first();
+        if (user == null) throw new IllegalArgumentException("User doesn't exist");
         return new User(user);
     }
 
     public ObjectId getUserId(String username) throws IllegalArgumentException {
         return getUser(username).id();
+    }
+
+    public String getUsername(ObjectId userId) throws IllegalArgumentException {
+        return getUser(userId).username();
     }
 
     /**
