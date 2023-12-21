@@ -3,6 +3,7 @@ package group.message_server.controller.api;
 import group.message_server.controller.database.FriendsController;
 import group.message_server.controller.database.UserController;
 import model.User;
+import model.UserCredentials;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,24 +18,45 @@ public class UserAPI {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> registerUser(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<String> registerUser(@RequestBody UserCredentials userCredentials) {
         UserController uc = new UserController();
-        User user = new User(username, password);
+        String username = userCredentials.getUsername();
+        String password = userCredentials.getPassword();
         try {
+            User user = new User(username, password);
             uc.addUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // TODO proper logging
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // TODO implement proper security with tokens
+    @GetMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody UserCredentials userCredentials) {
+        String username = userCredentials.getUsername();
+        String password = userCredentials.getPassword();
+        UserController uc = new UserController();
+        try {
+            uc.loginUser(username, password);
+            return ResponseEntity.ok("Login successful");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/addFriend")
+    @PutMapping("/addfriend")
     public ResponseEntity<String> addFriend(@RequestParam String username, @RequestParam String friendName) {
         UserController uc = new UserController();
         FriendsController fc = new FriendsController();
         try {
             fc.addFriend(uc.getUserId(username), uc.getUserId(friendName));
-            return ResponseEntity.ok("Friend added");
+            return ResponseEntity.ok("Friend request sent");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
