@@ -1,10 +1,12 @@
 package group.message_server.controller.database;
 
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.InsertOneResult;
 import model.FriendRecord;
 import model.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +70,36 @@ public class FriendsController {
         record.accept();
         Document filter = new Document("userId", record.getUserId())
                 .append("friendId", record.getFriendId());
-        Document update = record.toDocument();
+        Document update = new Document("$set", record.toDocument());
+        databaseController.getDatabase()
+                .getCollection(FRIENDS_COLLECTION_NAME)
+                .updateOne(filter, update);
+    }
+
+    /**
+     * Rejects a friend request from userId to friendId.
+     *
+     * @param userId the user sending the friend request.
+     * @param friendId the user receiving the friend request.
+     */
+    public void rejectFriendRequest(ObjectId userId, ObjectId friendId) {
+        FriendRecord record = getFriendRecord(userId, friendId);
+        if (record == null) {
+            throw new IllegalArgumentException("Friend request does not exist");
+        }
+        if (record.isAccepted()) {
+            throw new IllegalArgumentException("Friend request already accepted");
+        }
+        if (record.isRejected()) {
+            throw new IllegalArgumentException("Friend request already rejected");
+        }
+        if (record.getUserId().equals(friendId)) {
+            record.reject();
+        }
+        // TODO extract update method
+        Document filter = new Document("userId", record.getUserId())
+                .append("friendId", record.getFriendId());
+        Document update = new Document("$set", record.toDocument());
         databaseController.getDatabase()
                 .getCollection(FRIENDS_COLLECTION_NAME)
                 .updateOne(filter, update);
@@ -82,9 +113,12 @@ public class FriendsController {
      */
     private void createFriendRecord(ObjectId userId, ObjectId friendId) {
         Document friendRecord = new FriendRecord(userId, friendId).toDocument();
-        databaseController.getDatabase()
+        InsertOneResult result = databaseController.getDatabase()
                 .getCollection(FRIENDS_COLLECTION_NAME)
                 .insertOne(friendRecord);
+        if (!result.wasAcknowledged()) {
+            throw new RuntimeException("Could not add friend");
+        }
     }
 
     /**
@@ -130,8 +164,20 @@ public class FriendsController {
         return databaseController.getDatabase()
                 .getCollection(FRIENDS_COLLECTION_NAME)
                 .find(Filters.or(
-                        Filters.eq("user_id", userId),
-                        Filters.eq("friend_id", userId)
+                        Filters.eq("userId", userId),
+                        Filters.eq("friendId", userId)
                 )).map(FriendRecord::new).into(new ArrayList<>());
+    }
+
+    public List<String> getPendingRequests(ObjectId userId) {
+        UserController uc = new UserController();
+        List<FriendRecord> records = getFriendRecords(userId);
+        List<String> pendingRequests = new ArrayList<>();
+        for (FriendRecord record : records) {
+            if (record.isPending()) {
+                pendingRequests.add(uc.getUsername(record.other(userId)));
+            }
+        }
+        return pendingRequests;
     }
 }

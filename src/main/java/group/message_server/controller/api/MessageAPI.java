@@ -14,10 +14,10 @@ import java.util.List;
 @RequestMapping("/message")
 public class MessageAPI {
 
-    @PostMapping("/send")
+    @PostMapping(value = "/send", consumes = "text/plain")
     public ResponseEntity<String> sendMessage(@RequestParam String sender,
                                               @RequestParam String recipient,
-                                              @RequestParam String message) {
+                                              @RequestBody String message) {
         var mc = new MessageController();
         var uc = new UserController();
         var fc = new FriendsController();

@@ -30,12 +30,10 @@ public class MessageClient {
                     String username = scanner.nextLine();
                     System.out.println("Enter password:");
                     String password = scanner.nextLine();
-                    try {
-                        uc.loginUser(username, password);
-                    } catch (JSONException e) {
-                        System.out.println("Error logging in");
-                        System.out.println(e.getMessage());
-                    }
+                    if (uc.loginUser(username, password))
+                        System.out.println("Login successful");
+                    else
+                        System.out.println("Login failed");
                     break;
                 case "register":
                     System.out.println("Enter username:");
@@ -49,18 +47,22 @@ public class MessageClient {
                         System.out.println(e.getMessage());
                     }
                     break;
-                case "friend":
+                case "add friend":
                     System.out.println("Enter friend name:");
                     String friendName = scanner.nextLine();
                     uc.addFriend(friendName);
+                    System.out.println("Friend request sent");
                     break;
                 case "requests":
-                    uc.getFriendRequests();
+                    System.out.println(uc.getFriendRequests());
                     break;
                 case "accept":
                     System.out.println("Enter friend name:");
                     friendName = scanner.nextLine();
                     uc.acceptFriend(friendName);
+                    break;
+                case "friends":
+                    System.out.println(uc.getFriends());
                     break;
                 case "send":
                     System.out.println("Enter recipient name:");

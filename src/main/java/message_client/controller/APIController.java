@@ -1,15 +1,10 @@
 package message_client.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import model.UserCredentials;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class APIController {
     private final HTTPConnectionController httpConnectionController = new HTTPConnectionController();
@@ -18,45 +13,60 @@ public class APIController {
         return httpConnectionController.checkConnection();
     }
 
-    public JSONObject get(String endpoint, JSONObject requestBody) {
-        return httpConnectionController.makeHttpRequest(endpoint, "GET", requestBody);
-    }
-
-    public JSONObject post(String endpoint, JSONObject requestBody) {
-        return httpConnectionController.makeHttpRequest(endpoint, "POST", requestBody);
-    }
-
     // WORKS
-    public void registerUser(String endpoint, String username, String password) {
-        String BASE_URL = "http://localhost:8080";
+    public void registerUser(String username, String password) {
+        httpConnectionController.post("/user/new", new UserCredentials(username, password));
+    }
+
+    // TODO return api token
+    public String loginUser(String username, String password) {
+        return httpConnectionController.post("/user/login", new UserCredentials(username, password));
+    }
+
+    public void addFriend(String username, String friendName) {
+        httpConnectionController.put("/user/addfriend" + "?username=" + username + "&friendName=" + friendName, null);
+    }
+
+    public List<String> getPendingFriendRequests(String username) {
         try {
-            HttpClient httpClient = HttpClient.newHttpClient();
-
-            UserCredentials userCredentials = new UserCredentials(username, password);
-
-            // convert to json string
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(userCredentials);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + endpoint))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            int statusCode = response.statusCode();
-            String responseBody = response.body();
-
-            if (statusCode == 201) {
-                System.out.println("User created successfully: " + responseBody);
-            } else {
-                System.out.println("Failed to create user. HTTP status code: " + statusCode);
-                System.out.println("Response body: " + responseBody);
+            String response = httpConnectionController.get("/user/pending-requests" + "?username=" + username);
+            if (response != null) {
+                JSONArray friendRequests = new JSONArray(response);
+                List<String> friendRequestsStrings = new ArrayList<>();
+                for (int i = 0; i < friendRequests.length(); i++) {
+                    friendRequestsStrings.add(friendRequests.getString(i));
+                }
+                return friendRequestsStrings;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            // assuming response is well-formed
         }
+        return null;
+    }
+
+    public void acceptFriend(String username, String friendName) {
+        addFriend(username, friendName);
+    }
+
+    public List<String> getFriends(String username) {
+        try {
+            String response = httpConnectionController.get("/user/friends" + "?username=" + username);
+            // TODO fix duplicated code
+            if (response != null) {
+                JSONArray friends = new JSONArray(response);
+                List<String> friendsStrings = new ArrayList<>();
+                for (int i = 0; i < friends.length(); i++) {
+                    friendsStrings.add(friends.getString(i));
+                }
+                return friendsStrings;
+            }
+        } catch (Exception ignored) {
+            // assuming response is well-formed
+        }
+        return null;
+    }
+
+    public void sendMessage(String username, String recipientId, String body) {
+        httpConnectionController.post("/message/send" + "?sender=" + username + "&recipient=" + recipientId, body);
     }
 }

@@ -1,19 +1,35 @@
 package message_client.controller;
 
+import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class UserController {
+    private static String username = null;
     private final APIController apiController = new APIController();
-    public void loginUser(String username, String password) throws JSONException {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("username", username);
-        requestBody.put("password", password);
+    public boolean loginUser(String username, String password) {
 
-        JSONObject response = apiController.post("/user/login", requestBody);
+        String token = apiController.loginUser(username, password);
+        // TODO use token
+        if (token != null) {
+            UserController.username = username;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-        // TODO handle response without printing
-        System.out.println(response);
+    public static String getUsername() {
+        if (username == null) {
+            throw new IllegalStateException("User is not logged in");
+        }
+        return username;
+    }
+
+    public boolean isLoggedIn() {
+        return username != null;
     }
 
     public void registerUser(String username, String password) throws JSONException {
@@ -21,22 +37,23 @@ public class UserController {
         requestBody.put("username", username);
         requestBody.put("password", password);
 
-//        JSONObject response = apiController.post("/user/new", requestBody);
         // TODO handle response without printing
-
-//        System.out.println(response);
-        apiController.registerUser("/user/new", username, password);
+        apiController.registerUser(username, password);
     }
 
     public void addFriend(String friendName) {
-        // TODO
+        apiController.addFriend(username, friendName);
     }
 
-    public void getFriendRequests() {
-        // TODO
+    public List<String> getFriendRequests() {
+        return apiController.getPendingFriendRequests(username);
     }
 
     public void acceptFriend(String friendName) {
-        // TODO
+        apiController.acceptFriend(username, friendName);
+    }
+
+    public List<String> getFriends() {
+        return apiController.getFriends(username);
     }
 }

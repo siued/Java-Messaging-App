@@ -91,6 +91,15 @@ public class FriendRecord {
     }
 
     /**
+     * Returns true if the friend request is pending.
+     *
+     * @return true if the friend request is pending.
+     */
+    public boolean isPending() {
+        return status == Status.PENDING;
+    }
+
+    /**
      * Accepts a friend request.
      *
      * @throws IllegalStateException if the friend request is not pending.
@@ -122,9 +131,9 @@ public class FriendRecord {
      * @throws IllegalArgumentException if the provided user id is not in this friend record.
      */
     public ObjectId other(ObjectId userId) {
-        if (this.userId == userId) {
-            return friendId;
-        } else if (friendId == userId) {
+        if (this.userId.equals(userId)) {
+            return this.friendId;
+        } else if (this.friendId.equals(userId)) {
             return this.userId;
         } else {
             throw new IllegalArgumentException("User Id " + userId + " is not in this friend record");
