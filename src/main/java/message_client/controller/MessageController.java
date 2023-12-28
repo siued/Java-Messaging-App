@@ -1,6 +1,8 @@
 package message_client.controller;
 
-import java.util.logging.Logger;
+import model.Message;
+
+import java.util.List;
 
 public class MessageController {
     private final APIController apiController = new APIController();
@@ -9,15 +11,15 @@ public class MessageController {
         apiController.sendMessage(UserController.getUsername(), recipientId, body);
     }
 
-    public void getUnreadMessages() {
-        // TODO
+    public List<Message> getUnreadMessages() {
+        return apiController.getUnreadMessages(UserController.getUsername());
     }
 
-    public void getReceivedMessages() {
-        // TODO
+    public List<Message> getReceivedMessages() {
+        return apiController.getReceivedMessages(UserController.getUsername());
     }
 
-    public void getSentMessages() {
-        // TODO
+    public List<Message> getSentMessages() {
+        return apiController.getSentMessages(UserController.getUsername());
     }
 }

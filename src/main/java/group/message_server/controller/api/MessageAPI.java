@@ -59,6 +59,7 @@ public class MessageAPI {
             ObjectId userId = uc.getUserId(username);
             List<Message> messages = mc.getReceivedMessages(userId);
             mc.setDelivered(messages);
+            System.out.println(messages);
             return ResponseEntity.ok(messages);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

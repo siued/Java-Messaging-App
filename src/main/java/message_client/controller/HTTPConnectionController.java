@@ -107,7 +107,6 @@ public class HTTPConnectionController {
     }
 
     public String post(String endpoint, Object requestBody) {
-        System.out.println(endpoint);
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
             HttpRequest request;
 

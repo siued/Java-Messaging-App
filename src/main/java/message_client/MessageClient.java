@@ -72,13 +72,13 @@ public class MessageClient {
                     mc.sendMessage(recipientId, body);
                     break;
                 case "unread":
-                    mc.getUnreadMessages();
+                    System.out.println(mc.getUnreadMessages());
                     break;
                 case "received":
-                    mc.getReceivedMessages();
+                    System.out.println(mc.getReceivedMessages());
                     break;
                 case "sent":
-                    mc.getSentMessages();
+                    System.out.println(mc.getSentMessages());
                     break;
                 case "exit":
                     System.exit(0);

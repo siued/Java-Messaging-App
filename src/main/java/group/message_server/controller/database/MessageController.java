@@ -28,16 +28,16 @@ public class MessageController {
      * @param body body of the message
      */
     public void sendMessage(ObjectId senderId, ObjectId recipientId, String body) throws IllegalArgumentException {
-        Date date = new Date();
-
         Document message = new Message(
                 null,
                 body,
                 senderId,
                 recipientId,
-                date,
+                new Date(),
                 null
         ).toDocument();
+
+        System.out.println(message);
 
         databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)
@@ -100,13 +100,16 @@ public class MessageController {
      */
     private List<Message> getReceivedMessages(ObjectId recipientId, boolean delivered) {
         Bson filter;
-        if (delivered) {
+        if (!delivered) {
             filter = Filters.and(
                     Filters.eq("recipientId", recipientId),
                     Filters.eq("deliveredAt", null));
         } else {
             filter = Filters.eq("recipientId", recipientId);
         }
+//        Bson update = Updates.set("deliveredAt", new Date());
+//
+//        databaseController.getDatabase().getCollection(MESSAGES_COLLECTION_NAME).updateMany(filter, update);
 
         return databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)

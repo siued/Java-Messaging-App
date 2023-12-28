@@ -2,6 +2,8 @@ package model;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -20,6 +22,15 @@ public record Message(ObjectId id,
         if (senderId.equals(recipientId)) {
             throw new IllegalArgumentException("Cannot send message to self");
         }
+    }
+
+    public Message(JSONObject jsonObject) throws JSONException {
+        this(null,
+                jsonObject.getString("body"),
+                new ObjectId(jsonObject.getString("senderId")),
+                new ObjectId(jsonObject.getString("recipientId")),
+                new Date(jsonObject.getString("createdAt")),
+                new Date(jsonObject.getString("deliveredAt")));
     }
 
     public boolean isDelivered() {
@@ -45,5 +56,16 @@ public record Message(ObjectId id,
             document.append("_id", id);
         }
         return document;
+    }
+
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", body='" + body + '\'' +
+                ", senderId=" + senderId +
+                ", recipientId=" + recipientId +
+                ", createdAt=" + createdAt +
+                ", deliveredAt=" + deliveredAt +
+                '}';
     }
 }
