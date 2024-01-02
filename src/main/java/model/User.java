@@ -18,6 +18,9 @@ public record User(ObjectId id,
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be null or blank");
         }
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces");
+        }
         if (passwordHash == null || passwordHash.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or blank");
         }

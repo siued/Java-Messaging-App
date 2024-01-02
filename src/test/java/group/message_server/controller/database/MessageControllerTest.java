@@ -21,8 +21,8 @@ class MessageControllerTest {
         assertTrue(fc.areFriends(senderId, recipientId));
 
         String message = "hello";
-        mc.sendMessage(senderId, recipientId, message);
+        mc.sendMessage(sender, recipient, message);
 
-        assertEquals(1, mc.getReceivedMessages(recipientId).size());
+        assertEquals(1, mc.getReceivedMessages(recipient).size());
     }
 }

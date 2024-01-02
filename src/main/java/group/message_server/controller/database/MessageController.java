@@ -21,18 +21,18 @@ public class MessageController {
     private static final DatabaseController databaseController = DatabaseController.getInstance();
 
     /**
-     * Send a message from senderId to recipientId with the given body.
+     * Send a message from sender to recipient with the given body.
      *
-     * @param senderId id of the sender
-     * @param recipientId id of the recipient
+     * @param sender username of the sender
+     * @param recipient username of the recipient
      * @param body body of the message
      */
-    public void sendMessage(ObjectId senderId, ObjectId recipientId, String body) throws IllegalArgumentException {
+    public void sendMessage(String sender, String recipient, String body) throws IllegalArgumentException {
         Document message = new Message(
                 null,
                 body,
-                senderId,
-                recipientId,
+                sender,
+                recipient,
                 new Date(),
                 null
         ).toDocument();
@@ -47,21 +47,21 @@ public class MessageController {
     /**
      * Returns a list of all unread messages for the given recipient.
      *
-     * @param recipientId id of the recipient
+     * @param recipient username of the recipient
      * @return a list of all unread messages for the given recipient
      */
-    public List<Message> getUnreadReceivedMessages(ObjectId recipientId) {
-        return getReceivedMessages(recipientId, false);
+    public List<Message> getUnreadReceivedMessages(String recipient) {
+        return getReceivedMessages(recipient, false);
     }
 
     /**
      * Returns a list of all messages for the given recipient.
      *
-     * @param recipientId id of the recipient
+     * @param recipient username of the recipient
      * @return a list of all messages for the given recipient
      */
-    public List<Message> getReceivedMessages(ObjectId recipientId) {
-        return getReceivedMessages(recipientId, true);
+    public List<Message> getReceivedMessages(String recipient) {
+        return getReceivedMessages(recipient, true);
     }
 
     /**
@@ -94,18 +94,18 @@ public class MessageController {
     /**
      * Returns a list of all messages for the given recipient.
      *
-     * @param recipientId id of the recipient
+     * @param recipient username of the recipient
      * @param delivered whether to return all or only undelivered messages
      * @return a list of all messages for the given recipient
      */
-    private List<Message> getReceivedMessages(ObjectId recipientId, boolean delivered) {
+    private List<Message> getReceivedMessages(String recipient, boolean delivered) {
         Bson filter;
         if (!delivered) {
             filter = Filters.and(
-                    Filters.eq("recipientId", recipientId),
+                    Filters.eq("recipient", recipient),
                     Filters.eq("deliveredAt", null));
         } else {
-            filter = Filters.eq("recipientId", recipientId);
+            filter = Filters.eq("recipient", recipient);
         }
 //        Bson update = Updates.set("deliveredAt", new Date());
 //
@@ -120,11 +120,11 @@ public class MessageController {
     /**
      * Returns a list of all messages sent by the given sender.
      *
-     * @param senderId id of the sender
+     * @param sender username of the sender
      * @return a list of all messages sent by the given sender
      */
-    public List<Message> getSentMessages(ObjectId senderId) {
-        Bson filter = Filters.eq("senderId", senderId);
+    public List<Message> getSentMessages(String sender) {
+        Bson filter = Filters.eq("sender", sender);
 
         return databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)

@@ -5,12 +5,13 @@ import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public record Message(ObjectId id,
                       String body,
-                      ObjectId senderId,
-                      ObjectId recipientId,
+                      String sender,
+                      String recipient,
                       Date createdAt,
                       Date deliveredAt) {
 
@@ -19,7 +20,7 @@ public record Message(ObjectId id,
             throw new IllegalArgumentException("Message body cannot be null or blank");
         }
 
-        if (senderId.equals(recipientId)) {
+        if (sender.equals(recipient)) {
             throw new IllegalArgumentException("Cannot send message to self");
         }
     }
@@ -27,10 +28,12 @@ public record Message(ObjectId id,
     public Message(JSONObject jsonObject) throws JSONException {
         this(null,
                 jsonObject.getString("body"),
-                new ObjectId(jsonObject.getString("senderId")),
-                new ObjectId(jsonObject.getString("recipientId")),
-                new Date(jsonObject.getString("createdAt")),
-                new Date(jsonObject.getString("deliveredAt")));
+                jsonObject.getString("sender"),
+                jsonObject.getString("recipient"),
+                Date.from(ZonedDateTime.parse(jsonObject.getString("createdAt")).toInstant()),
+                jsonObject.getBoolean("delivered") ?
+                        Date.from(ZonedDateTime.parse(jsonObject.getString("deliveredAt")).toInstant())
+                        : null);
     }
 
     public boolean isDelivered() {
@@ -40,16 +43,16 @@ public record Message(ObjectId id,
     public Message(Document document) {
         this(document.getObjectId("_id"),
                 document.getString("body"),
-                document.getObjectId("senderId"),
-                document.getObjectId("recipientId"),
+                document.getString("sender"),
+                document.getString("recipient"),
                 document.getDate("createdAt"),
                 document.getDate("deliveredAt"));
     }
 
     public Document toDocument() {
         Document document = new Document("body", body)
-                .append("senderId", senderId)
-                .append("recipientId", recipientId)
+                .append("sender", sender)
+                .append("recipient", recipient)
                 .append("createdAt", createdAt)
                 .append("deliveredAt", deliveredAt);
         if (id != null) {
@@ -62,8 +65,8 @@ public record Message(ObjectId id,
         return "Message{" +
                 "id=" + id +
                 ", body='" + body + '\'' +
-                ", senderId=" + senderId +
-                ", recipientId=" + recipientId +
+                ", sender=" + sender +
+                ", recipient=" + recipient +
                 ", createdAt=" + createdAt +
                 ", deliveredAt=" + deliveredAt +
                 '}';

@@ -84,13 +84,11 @@ public class APIController {
             List<Message> messages = new ArrayList<>();
             for (String jsonMessage : getStringsFromJSONStringList(response)) {
                 //parse json into message object
-                System.out.println(jsonMessage);
                 messages.add(new Message(new JSONObject(jsonMessage)));
             }
             return messages;
         } catch (Exception ignored) {
             // assuming response is well-formed
-            System.out.println(Arrays.toString(ignored.getStackTrace()));
         }
         return null;
     }

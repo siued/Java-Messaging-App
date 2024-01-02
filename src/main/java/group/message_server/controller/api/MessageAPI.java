@@ -28,7 +28,7 @@ public class MessageAPI {
             if (!fc.areFriends(senderId, recipientId)) {
                 return ResponseEntity.badRequest().body("You must be friends to send a message");
             }
-            mc.sendMessage(senderId, recipientId, message);
+            mc.sendMessage(sender, recipient, message);
             return ResponseEntity.ok("Message sent");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -38,11 +38,9 @@ public class MessageAPI {
     @GetMapping("/unread")
     public ResponseEntity<?> getUnreadMessages(@RequestParam String username) {
         var mc = new MessageController();
-        var uc = new UserController();
 
         try {
-            ObjectId userId = uc.getUserId(username);
-            List<Message> messages = mc.getUnreadReceivedMessages(userId);
+            List<Message> messages = mc.getUnreadReceivedMessages(username);
             mc.setDelivered(messages);
             return ResponseEntity.ok(messages);
         } catch (IllegalArgumentException e) {
@@ -53,13 +51,10 @@ public class MessageAPI {
     @GetMapping("/received")
     public ResponseEntity<?> getAllMessages(@RequestParam String username) {
         var mc = new MessageController();
-        var uc = new UserController();
 
         try {
-            ObjectId userId = uc.getUserId(username);
-            List<Message> messages = mc.getReceivedMessages(userId);
+            List<Message> messages = mc.getReceivedMessages(username);
             mc.setDelivered(messages);
-            System.out.println(messages);
             return ResponseEntity.ok(messages);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -69,11 +64,9 @@ public class MessageAPI {
     @GetMapping("/sent")
     public ResponseEntity<?> getAllSentMessages(@RequestParam String username) {
         var mc = new MessageController();
-        var uc = new UserController();
 
         try {
-            ObjectId userId = uc.getUserId(username);
-            List<Message> messages = mc.getSentMessages(userId);
+            List<Message> messages = mc.getSentMessages(username);
             return ResponseEntity.ok(messages);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
