@@ -131,4 +131,12 @@ public class MessageController {
                 .find(filter)
                 .map(Message::new).into(new ArrayList<>());
     }
+
+    public void deleteMessage(ObjectId messageId) {
+        Bson filter = Filters.eq("_id", messageId);
+
+        databaseController.getDatabase()
+                .getCollection(MESSAGES_COLLECTION_NAME)
+                .deleteOne(filter);
+    }
 }

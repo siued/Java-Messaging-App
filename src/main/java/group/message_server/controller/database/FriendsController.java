@@ -5,6 +5,7 @@ import com.mongodb.client.result.InsertOneResult;
 import model.FriendRecord;
 import model.User;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -179,5 +180,24 @@ public class FriendsController {
             }
         }
         return pendingRequests;
+    }
+
+    public void deleteFriendRecord(String user1, String user2) {
+        Bson filter = Filters.and(
+                Filters.or(
+                        Filters.and(
+                                Filters.eq("userId", user1),
+                                Filters.eq("friendId", user2)
+                        ),
+                        Filters.and(
+                                Filters.eq("userId", user2),
+                                Filters.eq("friendId", user1)
+                        )
+                )
+        );
+
+        databaseController.getDatabase()
+                .getCollection(FRIENDS_COLLECTION_NAME)
+                .deleteMany(filter);
     }
 }

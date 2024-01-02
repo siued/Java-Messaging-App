@@ -1,9 +1,13 @@
 package model;
 
 import lombok.Getter;
+import lombok.NonNull;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+/**
+ * Represents a friend request between two users.
+ */
 public class FriendRecord {
     @Getter
     private final ObjectId userId;
@@ -24,7 +28,11 @@ public class FriendRecord {
      * @param friendId the id of the user receiving the friend request.
      * @param status the status of the friend request.
      */
-    private FriendRecord(ObjectId userId, ObjectId friendId, Status status) {
+    private FriendRecord(@NonNull ObjectId userId, @NonNull ObjectId friendId, @NonNull Status status) {
+        if (userId.equals(friendId)) {
+            throw new IllegalArgumentException("Cannot send friend request to self");
+        }
+
         this.userId = userId;
         this.friendId = friendId;
         this.status = status;

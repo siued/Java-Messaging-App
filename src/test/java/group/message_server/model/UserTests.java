@@ -24,19 +24,21 @@ public class UserTests {
     @Test
     public void userConstructorWithDocumentSetsCorrectFields() {
         ObjectId id = new ObjectId();
+        Date date1 = new Date();
+        Date date2 = new Date();
         Document document = new Document("_id", id)
                 .append("username", "test")
                 .append("passwordHash", "test")
-                .append("createdAt", new Date())
-                .append("lastLoginAt", new Date());
+                .append("createdAt", date1)
+                .append("lastLoginAt", date2);
 
         User user = new User(document);
 
         assertEquals(id, user.id());
         assertEquals("test", user.username());
         assertEquals("test", user.passwordHash());
-        assertNotNull(user.createdAt());
-        assertNotNull(user.lastLoginAt());
+        assertEquals(date1, user.createdAt());
+        assertEquals(date2, user.lastLoginAt());
     }
 
     @Test
@@ -68,5 +70,16 @@ public class UserTests {
         assertEquals("test", document.getString("passwordHash"));
         assertEquals(createdAt, document.getDate("createdAt"));
         assertEquals(lastLoginAt, document.getDate("lastLoginAt"));
+    }
+
+    @Test
+    public void usernameAndPasswordGetValidated() {
+        assertThrows(IllegalArgumentException.class, () -> new User("test", ""));
+        assertThrows(IllegalArgumentException.class, () -> new User("test", null));
+        assertThrows(IllegalArgumentException.class, () -> new User("", "test"));
+        assertThrows(IllegalArgumentException.class, () -> new User(null, "test"));
+        assertThrows(IllegalArgumentException.class, () -> new User("test test test", "test"));
+        assertThrows(IllegalArgumentException.class, () -> new User("test/", "test"));
+        assertThrows(IllegalArgumentException.class, () -> new User("test%", "test"));
     }
 }

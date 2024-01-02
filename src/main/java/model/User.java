@@ -14,12 +14,21 @@ public record User(ObjectId id,
                    Date createdAt,
                    Date lastLoginAt) {
 
+    /**
+     * Constructs a User object with the provided id, username, password, creation date and last login date.
+     *
+     * @param id the id of the user.
+     * @param username the username of the user. Must not be null, empty, or contain forbidden characters
+     * @param passwordHash the hashed password of the user. Must not be null or empty.
+     * @param createdAt the creation date of the user account.
+     * @param lastLoginAt the last login date of the user.
+     */
     public User {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be null or blank");
         }
-        if (username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot contain spaces");
+        if (username.matches(".*[/% ].*")) {
+            throw new IllegalArgumentException("Username cannot contain spaces, %, or /");
         }
         if (passwordHash == null || passwordHash.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or blank");

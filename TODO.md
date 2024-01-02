@@ -10,7 +10,7 @@
 - [ ] Improve test coverage
 - [ ] Get the backend running in Google Cloud
 - [ ] Implement a CI/CD pipeline
-- [ ] Implement HTTPS, make SSL certificate
+- [ ] Implement HTTPS, make SSL certificate, get GitHub Secrets working
 
 ## Frontend
 ### Java Swing
@@ -19,7 +19,7 @@
 - [ ] Implement a registration screen
 - [ ] Implement a chat screen
 - [ ] Implement a settings screen
-- [ ] Get the API connection working
+- [x] Get the API connection working
 
 ### Web
 - [ ] Decide React vs Laravel
