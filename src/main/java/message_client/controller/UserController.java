@@ -1,6 +1,5 @@
 package message_client.controller;
 
-import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +36,7 @@ public class UserController {
         requestBody.put("username", username);
         requestBody.put("password", password);
 
-        // TODO handle response without printing
+        // TODO handle response
         apiController.registerUser(username, password);
     }
 

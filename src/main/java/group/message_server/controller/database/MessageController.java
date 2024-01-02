@@ -28,6 +28,8 @@ public class MessageController {
      * @param body body of the message
      */
     public void sendMessage(String sender, String recipient, String body) throws IllegalArgumentException {
+        verifyUser(sender);
+        verifyUser(recipient);
         Document message = new Message(
                 null,
                 body,
@@ -36,8 +38,6 @@ public class MessageController {
                 new Date(),
                 null
         ).toDocument();
-
-        System.out.println(message);
 
         databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)
@@ -62,6 +62,18 @@ public class MessageController {
      */
     public List<Message> getReceivedMessages(String recipient) {
         return getReceivedMessages(recipient, true);
+    }
+
+    /**
+     * Check whether a user with the given username exists.
+     *
+     * @param username username of the user to check
+     * @throws IllegalArgumentException if the user does not exist
+     */
+    private void verifyUser(String username) throws IllegalArgumentException {
+        if (!new UserController().userExists(username)) {
+            throw new IllegalArgumentException("User does not exist");
+        }
     }
 
     /**
@@ -99,6 +111,7 @@ public class MessageController {
      * @return a list of all messages for the given recipient
      */
     private List<Message> getReceivedMessages(String recipient, boolean delivered) {
+        verifyUser(recipient);
         Bson filter;
         if (!delivered) {
             filter = Filters.and(
@@ -107,6 +120,7 @@ public class MessageController {
         } else {
             filter = Filters.eq("recipient", recipient);
         }
+        // TODO figure out a good way to set deliveredAt field
 //        Bson update = Updates.set("deliveredAt", new Date());
 //
 //        databaseController.getDatabase().getCollection(MESSAGES_COLLECTION_NAME).updateMany(filter, update);
@@ -124,6 +138,7 @@ public class MessageController {
      * @return a list of all messages sent by the given sender
      */
     public List<Message> getSentMessages(String sender) {
+        verifyUser(sender);
         Bson filter = Filters.eq("sender", sender);
 
         return databaseController.getDatabase()

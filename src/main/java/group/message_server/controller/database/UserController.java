@@ -116,6 +116,14 @@ public class UserController {
         return new User(user);
     }
 
+    public boolean userExists(String username) {
+        try {
+            return getUser(username) != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * Retrieves a User's id from the MongoDB database by username.
      *
