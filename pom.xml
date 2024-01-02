@@ -14,7 +14,7 @@
     <name>MessageApp</name>
     <description>MessageApp</description>
     <properties>
-        <java.version>14</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>
