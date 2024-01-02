@@ -1,11 +1,13 @@
 # Java messaging app
 
-This is a small messaging app written in Java. It uses a Spring Boot backend and will have multiple frontends in the future, including a Java Swing client and a web client.
+This is a small messaging app written in Java. It uses a Spring Boot backend and will have multiple frontends in the future, including a Java CLI client, Java Swing client and a web client.
 It is currently a work in progress, but I am planning to keep working on it to showcase my skills and learn new things. An approximate roadmap is in ```TODO.md```. 
 
 ## Running the app
 
-## 
+### Command-line version
+The app was written in Java 20.0, so compatibility with lower Java version is not guaranteed. To run the application, simply run the ```message_client.MessageClient``` class. The command-line interface will let you interact with the app. For a list of commands, type 'help'. 
+
 
 ## Database schema
 ![Database schema](db_diagram.png)
