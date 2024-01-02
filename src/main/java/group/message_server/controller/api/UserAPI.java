@@ -2,7 +2,6 @@ package group.message_server.controller.api;
 
 import group.message_server.controller.database.FriendsController;
 import group.message_server.controller.database.UserController;
-import model.FriendRecord;
 import model.User;
 import model.UserCredentials;
 import org.springframework.http.HttpStatus;
@@ -55,10 +54,9 @@ public class UserAPI {
 
     @PutMapping("/addfriend")
     public ResponseEntity<String> addFriend(@RequestParam String username, @RequestParam String friendName) {
-        UserController uc = new UserController();
         FriendsController fc = new FriendsController();
         try {
-            fc.addFriend(uc.getUserId(username), uc.getUserId(friendName));
+            fc.addFriend(username, friendName);
             return ResponseEntity.ok("Friend request sent");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -67,10 +65,9 @@ public class UserAPI {
 
     @GetMapping("friends")
     public ResponseEntity<?> getFriends(@RequestParam String username) {
-        UserController uc = new UserController();
         FriendsController fc = new FriendsController();
         try {
-            return ResponseEntity.ok(fc.getFriends(uc.getUserId(username)));
+            return ResponseEntity.ok(fc.getFriends(username));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -78,10 +75,9 @@ public class UserAPI {
 
     @GetMapping("/pending-requests")
     public ResponseEntity<?> getPendingFriendRequests(@RequestParam String username) {
-        UserController uc = new UserController();
         FriendsController fc = new FriendsController();
         try {
-            List<String> friendRecords = fc.getPendingRequests(uc.getUserId(username));
+            List<String> friendRecords = fc.getPendingRequests(username);
             return ResponseEntity.ok(friendRecords);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -90,10 +86,9 @@ public class UserAPI {
 
     @GetMapping("/reject-request")
     public ResponseEntity<String> rejectFriendRequest(@RequestParam String username, @RequestParam String friendName) {
-        UserController uc = new UserController();
         FriendsController fc = new FriendsController();
         try {
-            fc.rejectFriendRequest(uc.getUserId(username), uc.getUserId(friendName));
+            fc.rejectFriendRequest(username, friendName);
             return ResponseEntity.ok("Friend request rejected");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

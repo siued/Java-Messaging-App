@@ -79,13 +79,12 @@ public record User(ObjectId id,
 
     /**
      * Converts the User object into a MongoDB Document.
-     *
      * The resulting Document contains the following fields:
-     * "_id" - the ObjectId of the user (only if the id is not null),
-     * "username" - the username of the user,
-     * "passwordHash" - the hashed password of the user,
-     * "createdAt" - the creation date of the user account,
-     * "lastLoginAt" - the last login date of the user.
+     *      "_id" - the ObjectId of the user (only if the id is not null),
+     *      "username" - the username of the user,
+     *      "passwordHash" - the hashed password of the user,
+     *      "createdAt" - the creation date of the user account,
+     *      "lastLoginAt" - the last login date of the user.
      *
      * @return a Document representing the User object.
      */

@@ -19,13 +19,10 @@ public class MessageAPI {
                                               @RequestParam String recipient,
                                               @RequestBody String message) {
         var mc = new MessageController();
-        var uc = new UserController();
         var fc = new FriendsController();
 
         try {
-            ObjectId senderId = uc.getUserId(sender);
-            ObjectId recipientId = uc.getUserId(recipient);
-            if (!fc.areFriends(senderId, recipientId)) {
+            if (!fc.areFriends(sender, recipient)) {
                 return ResponseEntity.badRequest().body("You must be friends to send a message");
             }
             mc.sendMessage(sender, recipient, message);

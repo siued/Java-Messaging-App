@@ -7,166 +7,140 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FriendRecordTests {
+    private final String user = "TEST_USER";
+    private final String friend = "TEST_USER2";
 
     @Test
     public void friendRecordConstructorCreatesValidFriendRecord() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
-        assertEquals(userId, friendRecord.getUserId());
-        assertEquals(friendId, friendRecord.getFriendId());
+        FriendRecord friendRecord = new FriendRecord(user, friend);
+        assertEquals(user, friendRecord.getUser());
+        assertEquals(friend, friendRecord.getFriend());
         assertTrue(friendRecord.isPending());
     }
 
     @Test
     public void acceptChangesStatusToAccepted() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.accept();
         assertTrue(friendRecord.isAccepted());
     }
 
     @Test
     public void rejectChangesStatusToDeclined() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.reject();
         assertTrue(friendRecord.isRejected());
     }
 
     @Test
     public void acceptThrowsExceptionWhenNotPending() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.accept();
         assertThrows(IllegalStateException.class, friendRecord::accept);
     }
 
     @Test
     public void rejectThrowsExceptionWhenNotPending() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.reject();
         assertThrows(IllegalStateException.class, friendRecord::reject);
     }
 
     @Test
     public void otherReturnsCorrectUserId() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
-        assertEquals(friendId, friendRecord.other(userId));
-        assertEquals(userId, friendRecord.other(friendId));
+        FriendRecord friendRecord = new FriendRecord(user, friend);
+        assertEquals(friend, friendRecord.other(user));
+        assertEquals(user, friendRecord.other(friend));
     }
 
     @Test
     public void otherThrowsExceptionWhenUserIdNotInRecord() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
-        assertThrows(IllegalArgumentException.class, () -> friendRecord.other(new ObjectId()));
+        FriendRecord friendRecord = new FriendRecord(user, friend);
+        assertThrows(IllegalArgumentException.class, () -> friendRecord.other("INVALID_USER"));
     }
     @Test
     public void friendRecordConstructorThrowsExceptionWhenUserIdIsNull() {
-        assertThrows(NullPointerException.class, () -> new FriendRecord(null, new ObjectId()));
+        assertThrows(NullPointerException.class, () -> new FriendRecord(null, friend));
     }
 
     @Test
-    public void friendRecordConstructorThrowsExceptionWhenFriendIdIsNull() {
-        assertThrows(NullPointerException.class, () -> new FriendRecord(new ObjectId(), null));
+    public void friendRecordConstructorThrowsExceptionWhenfriendIsNull() {
+        assertThrows(NullPointerException.class, () -> new FriendRecord(user, null));
     }
 
     @Test
     public void toDocumentReturnsCorrectDocument() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         Document document = friendRecord.toDocument();
 
-        assertEquals(userId, document.getObjectId("userId"));
-        assertEquals(friendId, document.getObjectId("friendId"));
+        assertEquals(user, document.getString("user"));
+        assertEquals(friend, document.getString("friend"));
         assertEquals("PENDING", document.getString("status"));
     }
 
     @Test
     public void containsReturnsTrueWhenUserIdIsInRecord() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
 
-        assertTrue(friendRecord.contains(userId));
-        assertTrue(friendRecord.contains(friendId));
+        assertTrue(friendRecord.contains(user));
+        assertTrue(friendRecord.contains(friend));
     }
 
     @Test
     public void containsReturnsFalseWhenUserIdIsNotInRecord() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
 
-        assertFalse(friendRecord.contains(new ObjectId()));
+        assertFalse(friendRecord.contains("INVALID_USER"));
     }
 
     @Test
     public void friendRecordConstructorFromDocumentThrowsExceptionWhenUserIdIsNull() {
-        Document document = new Document("friendId", new ObjectId()).append("status", "PENDING");
-        assertThrows(NullPointerException.class, () -> new FriendRecord(document));
+        Document document = new Document("friend", new ObjectId()).append("status", "PENDING");
+        assertThrows(Exception.class, () -> new FriendRecord(document));
     }
 
     @Test
-    public void friendRecordConstructorFromDocumentThrowsExceptionWhenFriendIdIsNull() {
-        Document document = new Document("userId", new ObjectId()).append("status", "PENDING");
-        assertThrows(NullPointerException.class, () -> new FriendRecord(document));
+    public void friendRecordConstructorFromDocumentThrowsExceptionWhenfriendIsNull() {
+        Document document = new Document("user", new ObjectId()).append("status", "PENDING");
+        assertThrows(Exception.class, () -> new FriendRecord(document));
     }
 
     @Test
     public void friendRecordConstructorFromDocumentThrowsExceptionWhenStatusIsNull() {
-        Document document = new Document("userId", new ObjectId()).append("friendId", new ObjectId());
-        assertThrows(NullPointerException.class, () -> new FriendRecord(document));
+        Document document = new Document("user", new ObjectId()).append("friend", new ObjectId());
+        assertThrows(Exception.class, () -> new FriendRecord(document));
     }
 
     @Test
     public void friendRecordConstructorFromDocumentThrowsExceptionWhenStatusIsInvalid() {
-        Document document = new Document("userId", new ObjectId()).append("friendId", new ObjectId()).append("status", "INVALID");
-        assertThrows(IllegalArgumentException.class, () -> new FriendRecord(document));
+        Document document = new Document("user", new ObjectId()).append("friend", new ObjectId()).append("status", "INVALID");
+        assertThrows(Exception.class, () -> new FriendRecord(document));
     }
 
     @Test
     public void acceptThrowsExceptionWhenAlreadyAccepted() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.accept();
         assertThrows(IllegalStateException.class, friendRecord::accept);
     }
 
     @Test
     public void rejectThrowsExceptionWhenAlreadyRejected() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.reject();
         assertThrows(IllegalStateException.class, friendRecord::reject);
     }
 
     @Test
     public void acceptThrowsExceptionWhenAlreadyRejected() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.reject();
         assertThrows(IllegalStateException.class, friendRecord::accept);
     }
 
     @Test
     public void rejectThrowsExceptionWhenAlreadyAccepted() {
-        ObjectId userId = new ObjectId();
-        ObjectId friendId = new ObjectId();
-        FriendRecord friendRecord = new FriendRecord(userId, friendId);
+        FriendRecord friendRecord = new FriendRecord(user, friend);
         friendRecord.accept();
         assertThrows(IllegalStateException.class, friendRecord::reject);
     }

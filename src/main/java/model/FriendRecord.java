@@ -3,16 +3,15 @@ package model;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 /**
  * Represents a friend request between two users.
  */
 public class FriendRecord {
     @Getter
-    private final ObjectId userId;
+    private final String user;
     @Getter
-    private final ObjectId friendId;
+    private final String friend;
     private Status status;
 
     private enum Status {
@@ -24,28 +23,28 @@ public class FriendRecord {
     /**
      * Constructs a new FriendRecord object.
      *
-     * @param userId the id of the user sending the friend request.
-     * @param friendId the id of the user receiving the friend request.
-     * @param status the status of the friend request.
+     * @param user    the user sending the friend request.
+     * @param friend  the user receiving the friend request.
+     * @param status  the status of the friend request.
      */
-    private FriendRecord(@NonNull ObjectId userId, @NonNull ObjectId friendId, @NonNull Status status) {
-        if (userId.equals(friendId)) {
+    private FriendRecord(@NonNull String user, @NonNull String friend, @NonNull Status status) {
+        if (user.equals(friend)) {
             throw new IllegalArgumentException("Cannot send friend request to self");
         }
 
-        this.userId = userId;
-        this.friendId = friendId;
+        this.user = user;
+        this.friend = friend;
         this.status = status;
     }
 
     /**
      * Constructs a new pending FriendRecord object.
      *
-     * @param userId the id of the user sending the friend request.
-     * @param friendId the id of the user receiving the friend request.
+     * @param user   the user sending the friend request.
+     * @param friend the user receiving the friend request.
      */
-    public FriendRecord(ObjectId userId, ObjectId friendId) {
-        this(userId, friendId, Status.PENDING);
+    public FriendRecord(String user, String friend) {
+        this(user, friend, Status.PENDING);
     }
 
     /**
@@ -54,30 +53,30 @@ public class FriendRecord {
      * @param document the MongoDB document to construct a FriendRecord object from.
      */
     public FriendRecord(Document document) {
-        this(document.getObjectId("userId"),
-                document.getObjectId("friendId"),
+        this(document.getString("user"),
+                document.getString("friend"),
                 Status.valueOf(document.getString("status")));
     }
 
     /**
-     * convert this record to a MongoDB document
+     * Convert this record to a MongoDB document.
      *
      * @return a MongoDB document representing this record
      */
     public Document toDocument() {
-        return new Document("userId", userId)
-                .append("friendId", friendId)
+        return new Document("user", user)
+                .append("friend", friend)
                 .append("status", status.toString());
     }
 
     /**
      * Returns true if the provided user id is in this friend record.
      *
-     * @param userId the user id to check.
+     * @param username the username to check.
      * @return true if the provided user id is in this friend record.
      */
-    public boolean contains(ObjectId userId) {
-        return this.userId.equals(userId) || friendId.equals(userId);
+    public boolean contains(String username) {
+        return this.user.equals(username) || this.friend.equals(username);
     }
 
     /**
@@ -134,17 +133,17 @@ public class FriendRecord {
     /**
      * Returns the other user in this friend record.
      *
-     * @param userId the id of one of the users in this friend record.
+     * @param username the username of one of the users in this friend record.
      * @return the id of the other user in this friend record.
      * @throws IllegalArgumentException if the provided user id is not in this friend record.
      */
-    public ObjectId other(ObjectId userId) {
-        if (this.userId.equals(userId)) {
-            return this.friendId;
-        } else if (this.friendId.equals(userId)) {
-            return this.userId;
+    public String other(String username) {
+        if (this.user.equals(username)) {
+            return this.friend;
+        } else if (this.friend.equals(username)) {
+            return this.user;
         } else {
-            throw new IllegalArgumentException("User Id " + userId + " is not in this friend record");
+            throw new IllegalArgumentException("Username " + username + " is not in this friend record");
         }
     }
 }
