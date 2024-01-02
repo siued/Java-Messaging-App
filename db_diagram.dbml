@@ -1,0 +1,33 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table users {
+  _id ObjectId [primary key]
+  username string
+  passwordHash string
+  createdAt Date
+  lastLoginAt Date
+}
+
+Table messages {
+  _id ObjectId [primary key]
+  body string [note: 'content of the message']
+  sender string
+  recipient string
+  createdAt Date
+  deliveredAt Date
+}
+
+Table friends {
+  user string
+  friend string
+  status string
+}
+
+Ref: users.username > messages.sender
+
+Ref: users.username > messages.recipient
+
+Ref: users.username > friends.user
+
+Ref: users.username > friends.friend

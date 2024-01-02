@@ -7,7 +7,7 @@
 - [ ] Create API documentation
 - [ ] Make a database schema and save it somewhere
 - [ ] Implement better security
-- [ ] Improve test coverage
+- [x] Improve test coverage
 - [ ] Get the backend running in Google Cloud
 - [ ] Implement a CI/CD pipeline
 - [ ] Implement HTTPS, make SSL certificate, get GitHub Secrets working

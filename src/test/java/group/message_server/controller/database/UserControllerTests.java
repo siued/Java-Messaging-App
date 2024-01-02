@@ -1,18 +1,13 @@
 package group.message_server.controller.database;
 
-import group.message_server.controller.database.UserController;
 import model.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class UserControllerTests {
     private static final String username = "TEST_USER";
@@ -82,7 +77,7 @@ public class UserControllerTests {
     public void testGetId() {
         uc.addUser(user1);
         User user1WithId = uc.getUser(username);
-        assertTrue(user1WithId.id().equals(uc.getUserId(username)));
+        assertEquals(user1WithId.id(), uc.getUserId(username));
         uc.deleteUser(username);
     }
 
