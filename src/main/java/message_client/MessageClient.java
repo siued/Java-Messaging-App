@@ -42,6 +42,7 @@ public class MessageClient {
                     password = scanner.nextLine();
                     try {
                         uc.registerUser(username, password);
+                        System.out.println("User created");
                     } catch (JSONException e) {
                         System.out.println("Error registering user");
                         System.out.println(e.getMessage());
@@ -60,6 +61,7 @@ public class MessageClient {
                     System.out.println("Enter friend name:");
                     friendName = scanner.nextLine();
                     uc.acceptFriend(friendName);
+                    System.out.println("Friend request accepted");
                     break;
                 case "friends":
                     System.out.println(uc.getFriends());
@@ -70,6 +72,7 @@ public class MessageClient {
                     System.out.println("Enter message body:");
                     String body = scanner.nextLine();
                     mc.sendMessage(recipientId, body);
+                    System.out.println("Message sent");
                     break;
                 case "unread":
                     System.out.println(mc.getUnreadMessages());
@@ -82,6 +85,19 @@ public class MessageClient {
                     break;
                 case "exit":
                     System.exit(0);
+                    break;
+                case "help":
+                    System.out.println("login - login to an existing account");
+                    System.out.println("register - register a new account");
+                    System.out.println("add friend - send a friend request");
+                    System.out.println("requests - view pending friend requests");
+                    System.out.println("accept - accept a friend request");
+                    System.out.println("friends - view friends");
+                    System.out.println("send - send a message");
+                    System.out.println("unread - view unread messages");
+                    System.out.println("received - view received messages");
+                    System.out.println("sent - view sent messages");
+                    System.out.println("exit - exit the program");
                     break;
                 default:
                     System.out.println("Invalid command");

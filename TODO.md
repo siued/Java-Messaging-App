@@ -5,7 +5,7 @@
 - [x] Create a database
 - [x] Create a REST API
 - [ ] Create API documentation
-- [ ] Make a database schema and save it somewhere
+- [x] Make a database schema and save it in the project
 - [ ] Implement better security
 - [x] Improve test coverage
 - [ ] Get the backend running in Google Cloud
