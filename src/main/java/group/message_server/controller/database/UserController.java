@@ -39,10 +39,7 @@ public class UserController {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        Document doc = new Document("username", user.username())
-                .append("passwordHash", user.passwordHash())
-                .append("createdAt", user.createdAt())
-                .append("lastLoginAt", user.lastLoginAt());
+        Document doc = user.toDocument();
         collection.insertOne(doc);
     }
 
