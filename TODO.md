@@ -8,7 +8,7 @@
 - [x] Make a database schema and save it in the project
 - [ ] Implement better security
 - [x] Improve test coverage
-- [ ] Get the backend running in Google Cloud
+- [x] Get the backend running in Google Cloud
 - [ ] Implement a CI/CD pipeline
 - [ ] Implement HTTPS, make SSL certificate, get GitHub Secrets working
 
