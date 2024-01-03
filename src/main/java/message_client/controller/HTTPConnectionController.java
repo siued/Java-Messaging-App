@@ -34,7 +34,8 @@ public class HTTPConnectionController {
     }
 
     public String get(String endpoint) {
-        try (HttpClient httpClient = HttpClient.newHttpClient()) {
+        try {
+            HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + endpoint))
                     .header("Content-Type", "application/json")
@@ -58,7 +59,8 @@ public class HTTPConnectionController {
     }
 
     public String put(String endpoint, Object requestBody) {
-        try (HttpClient httpClient = HttpClient.newHttpClient()) {
+        try {
+            HttpClient httpClient = HttpClient.newHttpClient();
             if (requestBody == null) {
                 requestBody = "";
             }
@@ -107,7 +109,8 @@ public class HTTPConnectionController {
     }
 
     public String post(String endpoint, Object requestBody) {
-        try (HttpClient httpClient = HttpClient.newHttpClient()) {
+        try {
+            HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest request;
 
             if (requestBody instanceof String) {
