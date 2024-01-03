@@ -27,11 +27,5 @@ jobs:
 #      run: mvn clean install -DskipTests
 
     - name: Restart Application Service
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.GOOGLE_HOST }}
-        port: 22
-        username: ${{ secrets.GOOGLE_USERNAME }}
-        key: ${{ secrets.GOOGLE_SSH_KEY }}
-        script: |
-          sudo systemctl restart messageapp.service
+      run: |
+        echo ${{ secrets.SSH_PRIVATE_KEY }} | ssh -i /dev/stdin google-cloud-putty@34.23.14.42 'sudo systemctl restart service_name'
