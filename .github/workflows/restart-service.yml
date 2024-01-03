@@ -28,4 +28,5 @@ jobs:
 
     - name: Restart Application Service
       run: |
-        echo ${{ secrets.SSH_PRIVATE_KEY }} | ssh -i /dev/stdin google-cloud-putty@34.23.14.42 'sudo systemctl restart service_name'
+        echo ${{ secrets.SSH_PRIVATE_KEY }} ~/.ssh/id_rsa
+        ssh -i ~/.ssh/id_rsa google-cloud-putty@34.23.14.42 'sudo systemctl restart service_name'
