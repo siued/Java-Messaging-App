@@ -1,0 +1,21 @@
+name: Restart MessageApp Service
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name if needed
+  pull_request:
+    branches:
+      - main  # Adjust the branch name if needed
+
+jobs:
+  restart-service:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Restart Application Service
+      run: |
+        sudo systemctl restart messageapp.service
