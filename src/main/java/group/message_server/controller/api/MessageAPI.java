@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/message")
 public class MessageAPI {
-
     @PostMapping(value = "/send", consumes = "text/plain")
     public ResponseEntity<String> sendMessage(@RequestParam String sender,
                                               @RequestParam String recipient,
@@ -21,53 +20,39 @@ public class MessageAPI {
         var mc = new MessageController();
         var fc = new FriendsController();
 
-        try {
-            if (!fc.areFriends(sender, recipient)) {
-                return ResponseEntity.badRequest().body("You must be friends to send a message");
-            }
-            mc.sendMessage(sender, recipient, message);
-            return ResponseEntity.ok("Message sent");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        if (!fc.areFriends(sender, recipient)) {
+            throw new UnsupportedOperationException("You must be friends to send a message");
         }
+        mc.sendMessage(sender, recipient, message);
+        return ResponseEntity.ok("Message sent");
     }
 
     @GetMapping("/unread")
-    public ResponseEntity<?> getUnreadMessages(@RequestParam String username) {
+    public ResponseEntity<List<Message>> getUnreadMessages(@RequestParam String username) {
         var mc = new MessageController();
-
-        try {
-            List<Message> messages = mc.getUnreadReceivedMessages(username);
-            mc.setDelivered(messages);
-            return ResponseEntity.ok(messages);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<Message> messages = mc.getUnreadReceivedMessages(username);
+        mc.setDelivered(messages);
+        return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/received")
-    public ResponseEntity<?> getAllMessages(@RequestParam String username) {
+    public ResponseEntity<List<Message>> getAllMessages(@RequestParam String username) {
         var mc = new MessageController();
-
-        try {
-            List<Message> messages = mc.getReceivedMessages(username);
-            mc.setDelivered(messages);
-            return ResponseEntity.ok(messages);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<Message> messages = mc.getReceivedMessages(username);
+        mc.setDelivered(messages);
+        return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<?> getAllSentMessages(@RequestParam String username) {
+    public ResponseEntity<List<Message>> getAllSentMessages(@RequestParam String username) {
         var mc = new MessageController();
+        List<Message> messages = mc.getSentMessages(username);
+        return ResponseEntity.ok(messages);
+    }
 
-        try {
-            List<Message> messages = mc.getSentMessages(username);
-            return ResponseEntity.ok(messages);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 }
