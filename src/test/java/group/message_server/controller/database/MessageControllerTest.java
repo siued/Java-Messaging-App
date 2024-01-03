@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +38,7 @@ class MessageControllerTest {
     public void testSendMessage() {
         try {
             mc.sendMessage(username, friendName, "test message");
-            var messages = mc.getReceivedMessages(friendName);
+            List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
             Message message = messages.getFirst();
             assertEquals(username, message.sender());
@@ -79,7 +80,7 @@ class MessageControllerTest {
         try {
             mc.sendMessage(username, friendName, "test message");
             mc.sendMessage(username, friendName, "test message 2");
-            var messages = mc.getReceivedMessages(friendName);
+            List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(2, messages.size());
 
             mc.deleteMessage(messages.get(0).id());
@@ -94,10 +95,10 @@ class MessageControllerTest {
         try {
             mc.sendMessage(username, friendName, "test message");
             mc.sendMessage(username, friendName, "test message 2");
-            var messages = mc.getSentMessages(username);
+            List<Message> messages = mc.getSentMessages(username);
             assertEquals(2, messages.size());
 
-            var messages2 = mc.getSentMessages(friendName);
+            List<Message> messages2 = mc.getSentMessages(friendName);
             assertEquals(0, messages2.size());
 
             mc.deleteMessage(messages.get(0).id());
@@ -111,7 +112,7 @@ class MessageControllerTest {
     public void testDeleteMessage() {
         try {
             mc.sendMessage(username, friendName, "test message");
-            var messages = mc.getReceivedMessages(friendName);
+            List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
             Message message = messages.getFirst();
             assertEquals(username, message.sender());
@@ -133,7 +134,7 @@ class MessageControllerTest {
     public void testSetDelivered() {
         try {
             mc.sendMessage(username, friendName, "test message");
-            var messages = mc.getReceivedMessages(friendName);
+            List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
             Message message = messages.getFirst();
             assertNull(message.deliveredAt());

@@ -49,7 +49,7 @@ class FriendsControllerTest {
     public void newFriendRequestIsPending() {
         fc.addFriend(username, friendName);
         assertFalse(fc.areFriends(username, friendName));
-        var requests = fc.getPendingRequests(friendName);
+        List<String> requests = fc.getPendingRequests(friendName);
         assertEquals(1, requests.size());
         assertEquals(username, requests.getFirst());
     }
