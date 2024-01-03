@@ -51,7 +51,7 @@ class FriendsControllerTest {
         assertFalse(fc.areFriends(username, friendName));
         List<String> requests = fc.getPendingRequests(friendName);
         assertEquals(1, requests.size());
-        assertEquals(username, requests.getFirst());
+        assertEquals(username, requests.get(0));
     }
 
     @Test
