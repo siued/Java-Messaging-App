@@ -40,7 +40,7 @@ class MessageControllerTest {
             mc.sendMessage(username, friendName, "test message");
             List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
-            Message message = messages.getFirst();
+            Message message = messages.get(0);
             assertEquals(username, message.sender());
             assertEquals(friendName, message.recipient());
             assertEquals("test message", message.body());
@@ -59,7 +59,7 @@ class MessageControllerTest {
 //            mc.sendMessage(username, friendName, "test message");
 //            var messages = mc.getUnreadReceivedMessages(friendName);
 //            assertEquals(1, messages.size());
-//            Message message = messages.getFirst();
+//            Message message = messages.get(0);
 //            assertEquals(username, message.sender());
 //            assertEquals(friendName, message.recipient());
 //            assertEquals("test message", message.body());
@@ -114,7 +114,7 @@ class MessageControllerTest {
             mc.sendMessage(username, friendName, "test message");
             List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
-            Message message = messages.getFirst();
+            Message message = messages.get(0);
             assertEquals(username, message.sender());
             assertEquals(friendName, message.recipient());
             assertEquals("test message", message.body());
@@ -136,14 +136,14 @@ class MessageControllerTest {
             mc.sendMessage(username, friendName, "test message");
             List<Message> messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
-            Message message = messages.getFirst();
+            Message message = messages.get(0);
             assertNull(message.deliveredAt());
 
             mc.setDelivered(messages);
 
             messages = mc.getReceivedMessages(friendName);
             assertEquals(1, messages.size());
-            message = messages.getFirst();
+            message = messages.get(0);
             assertNotNull(message.deliveredAt());
 
             mc.deleteMessage(message.id());
