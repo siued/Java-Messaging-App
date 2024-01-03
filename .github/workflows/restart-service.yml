@@ -28,5 +28,5 @@ jobs:
 
     - name: Restart Application Service
       run: |
-        sudo systemctl list-unit-files | grep messageapp.service
+        sudo systemctl list-unit-files
         sudo systemctl restart messageapp.service
