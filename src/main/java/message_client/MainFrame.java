@@ -7,24 +7,50 @@ import message_client.observer_pattern.Listener;
 
 import javax.swing.*;
 
-public class mainFrame extends JFrame implements Listener {
+public class MainFrame extends JFrame implements Listener {
+    private static MainFrame instance = null;
     private final UserController uc = new UserController();
     private final MessageController mc = new MessageController();
     private final APIController ac = new APIController();
-    private final LoginPanel loginPanel = new LoginPanel();
-    private final MainPanel mainPanel = new MainPanel();
+    private final LoginPanel loginPanel = new LoginPanel(uc, mc, ac);
+    private final RegisterPanel registerPanel = new RegisterPanel(uc, mc, ac);
+    private final MainPanel mainPanel = new MainPanel(uc, mc, ac);
+    private final ConnectPanel connectPanel = new ConnectPanel(ac);
+    private final LoginRegisterPanel loginRegisterPanel = new LoginRegisterPanel();
 
-    public mainFrame() {
+    private MainFrame() {
+        super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        showLoginScreen();
+        showLoginRegisterScreen();
 
         uc.addListener(this);
         mc.addListener(this);
+        ac.addListener(this);
     }
 
-    private void showLoginScreen() {
+    public void showLoginRegisterScreen() {
+        setTitle("Login/Register");
+        setContentPane(loginRegisterPanel);
+        pack();
+        setVisible(true);
+        setSize(500, 500);
+    }
+
+    public void resetShownScreen() {
+        showLoginRegisterScreen();
+    }
+
+    public void showLoginScreen() {
         setTitle("Login");
         setContentPane(loginPanel);
+        pack();
+        setVisible(true);
+        setSize(500, 500);
+    }
+
+    public void showRegisterScreen() {
+        setTitle("Register");
+        setContentPane(registerPanel);
         pack();
         setVisible(true);
         setSize(500, 500);
@@ -56,7 +82,14 @@ public class mainFrame extends JFrame implements Listener {
         }
     }
 
+    public static MainFrame getInstance() {
+        if (instance == null) {
+            instance = new MainFrame();
+        }
+        return instance;
+    }
+
     public static void main(String[] args) {
-        new mainFrame();
+        MainFrame mainFrame = MainFrame.getInstance();
     }
 }
