@@ -72,8 +72,8 @@ public class APIController implements Listenable {
         return null;
     }
 
-    public void sendMessage(String username, String recipientId, String body) {
-        httpConnectionController.post("/message/send" + "?sender=" + username + "&recipient=" + recipientId, body);
+    public void sendMessage(String username, String recipient, String body) {
+        httpConnectionController.post("/message/send" + "?sender=" + username + "&recipient=" + recipient, body);
     }
 
     public List<Message> getMessages(String username, String type) {

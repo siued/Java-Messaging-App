@@ -1,4 +1,4 @@
-package message_client;
+package message_client.view;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

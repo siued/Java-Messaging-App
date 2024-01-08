@@ -5,6 +5,7 @@ import message_client.observer_pattern.Listener;
 import model.Message;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MessageController implements Listenable {
@@ -25,6 +26,17 @@ public class MessageController implements Listenable {
 
     public List<Message> getSentMessages() {
         return apiController.getSentMessages(UserController.getUsername());
+    }
+
+    public List<Message> getMessagesTo(String friendName) {
+        List<Message> messages = new ArrayList<>();
+        messages.addAll(getReceivedMessages());
+        messages.addAll(getSentMessages());
+
+        messages.removeIf(message -> !message.sender().equals(friendName) && !message.recipient().equals(friendName));
+
+        messages.sort(Comparator.comparing(Message::createdAt));
+        return messages;
     }
 
     public void addListener(Listener listener) {

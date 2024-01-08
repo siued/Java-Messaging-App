@@ -1,4 +1,4 @@
-package message_client;
+package message_client.view;
 
 import message_client.controller.APIController;
 import message_client.controller.MessageController;
