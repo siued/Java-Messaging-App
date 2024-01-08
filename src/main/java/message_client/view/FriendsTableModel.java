@@ -31,9 +31,9 @@ public class FriendsTableModel extends AbstractTableModel implements Listener {
         return friends.get(columnIndex);
     }
 
+    @Override
     public void update() {
         this.friends = uc.getFriends();
-        System.out.println("FriendsTableModel: " + friends);
-        fireTableDataChanged();
+        fireTableStructureChanged();
     }
 }

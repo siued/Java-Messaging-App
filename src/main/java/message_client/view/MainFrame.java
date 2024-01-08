@@ -80,6 +80,8 @@ public class MainFrame extends JFrame implements Listener {
         } else {
             showLoginScreen();
         }
+        pack();
+        repaint();
     }
 
     public static MainFrame getInstance() {

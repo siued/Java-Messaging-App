@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserController implements Listenable {
-    private static String username = "siued";
+    private static String username = null;
     private final APIController apiController = new APIController();
     private final List<Listener> listeners = new ArrayList<>();
     public boolean loginUser(String username, String password) {

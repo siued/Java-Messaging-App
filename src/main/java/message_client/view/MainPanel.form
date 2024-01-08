@@ -31,11 +31,7 @@
         </constraints>
         <properties/>
         <border type="none"/>
-        <children>
-          <hspacer id="a50e2">
-            <constraints/>
-          </hspacer>
-        </children>
+        <children/>
       </scrollpane>
       <component id="88d88" class="javax.swing.JTextField" binding="messageField">
         <constraints>

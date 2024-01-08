@@ -7,6 +7,7 @@ import message_client.observer_pattern.Listener;
 import model.Message;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -29,17 +30,23 @@ public class MainPanel extends JPanel implements Listener {
         this.mc = mc;
         this.ac = ac;
         add(MainPanel);
+        setVisible(true);
 
         createGUIComponents();
         updateMessagePane();
     }
 
     private void createGUIComponents() {
-        friendsTable.setModel(new FriendsTableModel(uc));
+        FriendsTableModel model = new FriendsTableModel(uc);
+        friendsTable.setModel(model);
+        model.addTableModelListener(e -> {
+            updateMessagePane();
+        });
         ListSelectionModel cellSelectionModel = friendsTable.getSelectionModel();
         cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         friendsTable.setColumnSelectionAllowed(true);
         friendsTable.setTableHeader(null);
+        friendsPane.doLayout();
 
         cellSelectionModel.addListSelectionListener(e -> {
             updateMessagePane();
@@ -64,9 +71,10 @@ public class MainPanel extends JPanel implements Listener {
         if (friendName == null) {
             return;
         }
+        JPanel messagePanel = new JPanel();
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
         List<Message> messages = mc.getMessagesTo(friendName);
         System.out.println("Messages: " + messages);
-        messagePane.removeAll();
         for (Message message : messages) {
             JLabel label = new JLabel(message.body());
             if (message.sender().equals(friendName)) {
@@ -74,11 +82,13 @@ public class MainPanel extends JPanel implements Listener {
             } else {
                 label.setHorizontalAlignment(SwingConstants.RIGHT);
             }
-            messagePane.add(label);
+            Border border = BorderFactory.createLineBorder(message.sender().equals(friendName) ? java.awt.Color.BLUE : java.awt.Color.RED, 2);
+            label.setBorder(border);
+            messagePanel.add(label);
+            messagePane.setViewportView(messagePanel);
         }
         messagePane.revalidate();
         messagePane.repaint();
-        MainFrame.getInstance().pack();
     }
 
     private String getSelectedFriend() {
@@ -91,8 +101,6 @@ public class MainPanel extends JPanel implements Listener {
 
     @Override
     public void update() {
-        friendsTable.revalidate();
-        friendsTable.repaint();
         updateMessagePane();
     }
 }
