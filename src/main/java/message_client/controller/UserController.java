@@ -1,19 +1,24 @@
 package message_client.controller;
 
+import message_client.observer_pattern.Listenable;
+import message_client.observer_pattern.Listener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserController {
+public class UserController implements Listenable {
     private static String username = null;
     private final APIController apiController = new APIController();
+    private final List<Listener> listeners = new ArrayList<>();
     public boolean loginUser(String username, String password) {
 
         String token = apiController.loginUser(username, password);
         // TODO use token
         if (token != null) {
             UserController.username = username;
+            this.update();
             return true;
         } else {
             return false;
@@ -54,5 +59,15 @@ public class UserController {
 
     public List<String> getFriends() {
         return apiController.getFriends(username);
+    }
+
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+
+    public void update() {
+        for (Listener listener : listeners) {
+            listener.update();
+        }
     }
 }
