@@ -7,8 +7,12 @@ It is currently a work in progress, but I am planning to keep working on it to s
 
 ## Running the app
 
+### GUI
+The GUI version is missing some features at the moment like the ability to add friends, but it is fully functional otherwise. To run the GUI version, run the ```message_client.view.MainFrame``` class. The GUI is written in Java Swing. I am not a designer, so 
+
 ### Command-line version
 The app was written in Java 20.0, so compatibility with lower Java version is not guaranteed. To run the application, simply run the ```message_client.MessageClient``` class. The command-line interface will let you interact with the app. For a list of commands, type 'help'. 
+This interface is quite crude, but it has full functionality and allows one to use the messaging service. 
 
 
 ## Database schema

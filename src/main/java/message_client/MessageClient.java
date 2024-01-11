@@ -3,7 +3,6 @@ package message_client;
 import message_client.controller.APIController;
 import message_client.controller.MessageController;
 import message_client.controller.UserController;
-import org.json.JSONException;
 
 import java.util.Scanner;
 
@@ -28,12 +27,13 @@ public class MessageClient {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
+            String username, password, friendName, recipient, body;
             switch (input) {
                 case "login":
                     System.out.println("Enter username:");
-                    String username = scanner.nextLine();
+                    username = scanner.nextLine();
                     System.out.println("Enter password:");
-                    String password = scanner.nextLine();
+                    password = scanner.nextLine();
                     if (uc.loginUser(username, password))
                         System.out.println("Login successful");
                     else
@@ -44,17 +44,12 @@ public class MessageClient {
                     username = scanner.nextLine();
                     System.out.println("Enter password:");
                     password = scanner.nextLine();
-                    try {
-                        uc.registerUser(username, password);
-                        System.out.println("User created");
-                    } catch (JSONException e) {
-                        System.out.println("Error registering user");
-                        System.out.println(e.getMessage());
-                    }
+                    uc.registerUser(username, password);
+                    System.out.println("User created");
                     break;
                 case "add friend":
                     System.out.println("Enter friend name:");
-                    String friendName = scanner.nextLine();
+                    friendName = scanner.nextLine();
                     uc.addFriend(friendName);
                     System.out.println("Friend request sent");
                     break;
@@ -72,10 +67,10 @@ public class MessageClient {
                     break;
                 case "send":
                     System.out.println("Enter recipient name:");
-                    String recipientId = scanner.nextLine();
+                    recipient = scanner.nextLine();
                     System.out.println("Enter message body:");
-                    String body = scanner.nextLine();
-                    mc.sendMessage(recipientId, body);
+                    body = scanner.nextLine();
+                    mc.sendMessage(recipient, body);
                     System.out.println("Message sent");
                     break;
                 case "unread":
@@ -105,7 +100,6 @@ public class MessageClient {
                     break;
                 default:
                     System.out.println("Invalid command");
-                    break;
             }
         }
     }
