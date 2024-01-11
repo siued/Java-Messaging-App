@@ -31,6 +31,12 @@ public class MainPanel extends JPanel {
                 updateMessagePane();
             }
         });
+        mc.addListener(new Listener() {
+            @Override
+            public void update() {
+                updateMessagePane();
+            }
+        });
         this.mc = mc;
         this.ac = ac;
         add(MainPanel);
@@ -77,7 +83,7 @@ public class MainPanel extends JPanel {
         List<Message> messages = mc.getMessagesTo(friendName);
         for (Message message : messages) {
             JLabel label = new JLabel(message.body());
-            // TODO fix
+            // TODO fix horizontal alignment
             if (message.sender().equals(friendName)) {
                 label.setHorizontalAlignment(SwingConstants.LEFT);
             } else {

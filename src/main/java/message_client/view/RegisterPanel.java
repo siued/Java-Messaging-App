@@ -23,7 +23,7 @@ public class RegisterPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     uc.registerUser(usernameTextField.getText(), Arrays.toString(passwordField1.getPassword()));
-                    MainFrame.getInstance().resetShownScreen();
+                    MainFrame.getInstance().showLoginRegisterScreen();
                     JOptionPane.showMessageDialog(null, "User registered successfully!");
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(null, exception.getMessage());

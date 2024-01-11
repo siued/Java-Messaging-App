@@ -8,6 +8,9 @@ import message_client.observer_pattern.Listener;
 
 import javax.swing.*;
 
+/**
+ * The main frame of the application.
+ */
 public class MainFrame extends JFrame {
     private static MainFrame instance = null;
     private final UserController uc = new UserController();
@@ -16,15 +19,31 @@ public class MainFrame extends JFrame {
     private final LoginPanel loginPanel = new LoginPanel(uc, mc, ac);
     private final RegisterPanel registerPanel = new RegisterPanel(uc, mc, ac);
     private final MainPanel mainPanel = new MainPanel(uc, mc, ac);
-    private final ConnectPanel connectPanel = new ConnectPanel(ac);
     private final LoginRegisterPanel loginRegisterPanel = new LoginRegisterPanel();
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private MainFrame() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        showLoginRegisterScreen();
+        initFrame();
+        startBackgroundTasks();
+    }
 
+    /**
+     * Starts background tasks.
+     * Currently, starts a thread that checks for new messages
+     */
+    private void startBackgroundTasks() {
         Thread messageUpdateThread = new Thread(new MessageUpdateController(uc, mc));
         messageUpdateThread.start();
+    }
+
+    /**
+     * Initializes the frame.
+     */
+    private void initFrame() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        showLoginRegisterScreen();
 
         uc.addListener(new Listener() {
             @Override
@@ -36,14 +55,11 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-        mc.addListener(new Listener() {
-            @Override
-            public void update() {
-                // TODO handle incoming messages
-            }
-        });
     }
 
+    /**
+     * Shows the login/register screen.
+     */
     public void showLoginRegisterScreen() {
         setTitle("Login/Register");
         setContentPane(loginRegisterPanel);
@@ -52,10 +68,16 @@ public class MainFrame extends JFrame {
         setSize(500, 500);
     }
 
-    public void resetShownScreen() {
+    /**
+     * Logs out the user. goes back to login/register screen.
+     */
+    public void logOut() {
         showLoginRegisterScreen();
     }
 
+    /**
+     * Shows the login screen.
+     */
     public void showLoginScreen() {
         setTitle("Login");
         setContentPane(loginPanel);
@@ -64,6 +86,9 @@ public class MainFrame extends JFrame {
         setSize(500, 500);
     }
 
+    /**
+     * Shows the register screen.
+     */
     public void showRegisterScreen() {
         setTitle("Register");
         setContentPane(registerPanel);
@@ -72,6 +97,9 @@ public class MainFrame extends JFrame {
         setSize(500, 500);
     }
 
+    /**
+     * Shows the main screen.
+     */
     private void showMainScreen() {
         setTitle("Main");
         setContentPane(mainPanel);
@@ -80,14 +108,11 @@ public class MainFrame extends JFrame {
         setSize(500, 500);
     }
 
-    private void showConnectScreen() {
-        setTitle("Connection error");
-        setContentPane(connectPanel);
-        pack();
-        setVisible(true);
-        setSize(500, 500);
-    }
-
+    /**
+     * Gets the singleton instance of the main frame.
+     *
+     * @return the instance of the main frame
+     */
     public static MainFrame getInstance() {
         if (instance == null) {
             instance = new MainFrame();
@@ -95,6 +120,12 @@ public class MainFrame extends JFrame {
         return instance;
     }
 
+    /**
+     * Main method. Starts the application by
+     * instantiating a MainFrame object.
+     *
+     * @param args input arguments
+     */
     public static void main(String[] args) {
         MainFrame.getInstance();
     }
