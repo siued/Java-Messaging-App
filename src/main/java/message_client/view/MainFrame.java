@@ -2,6 +2,7 @@ package message_client.view;
 
 import message_client.controller.APIController;
 import message_client.controller.MessageController;
+import message_client.controller.MessageUpdateController;
 import message_client.controller.UserController;
 import message_client.observer_pattern.Listener;
 
@@ -22,6 +23,9 @@ public class MainFrame extends JFrame {
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         showLoginRegisterScreen();
+
+        Thread messageUpdateThread = new Thread(new MessageUpdateController(uc, mc));
+        messageUpdateThread.start();
 
         uc.addListener(new Listener() {
             @Override

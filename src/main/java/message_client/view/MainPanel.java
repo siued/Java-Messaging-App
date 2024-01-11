@@ -8,8 +8,6 @@ import model.Message;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class MainPanel extends JPanel {
@@ -44,26 +42,18 @@ public class MainPanel extends JPanel {
     private void createGUIComponents() {
         FriendsTableModel model = new FriendsTableModel(uc);
         friendsTable.setModel(model);
-        model.addTableModelListener(e -> {
-            updateMessagePane();
-        });
+        model.addTableModelListener(e -> updateMessagePane());
         ListSelectionModel cellSelectionModel = friendsTable.getSelectionModel();
         cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         friendsTable.setColumnSelectionAllowed(true);
         friendsTable.setTableHeader(null);
         friendsPane.doLayout();
 
-        cellSelectionModel.addListSelectionListener(e -> {
-            updateMessagePane();
-        });
+        cellSelectionModel.addListSelectionListener(e -> updateMessagePane());
 
-        sendButton.addActionListener(e -> {
-            sendMessage();
-        });
+        sendButton.addActionListener(e -> sendMessage());
 
-        messageField.addActionListener(e -> {
-            sendMessage();
-        });
+        messageField.addActionListener(e -> sendMessage());
     }
 
     private void sendMessage() {

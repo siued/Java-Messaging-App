@@ -12,6 +12,8 @@ public class FriendsTableModel extends AbstractTableModel {
 
     public FriendsTableModel(UserController uc) {
         this.uc = uc;
+        this.friends = uc.getFriends();
+
         uc.addListener(new Listener() {
             @Override
             public void update() {
@@ -19,7 +21,6 @@ public class FriendsTableModel extends AbstractTableModel {
                 fireTableStructureChanged();
             }
         });
-        this.friends = uc.getFriends();
     }
 
     @Override

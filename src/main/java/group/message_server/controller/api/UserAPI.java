@@ -1,6 +1,7 @@
 package group.message_server.controller.api;
 
 import group.message_server.controller.database.FriendsController;
+import group.message_server.controller.database.MessageController;
 import group.message_server.controller.database.UserController;
 import model.User;
 import model.UserCredentials;
@@ -63,6 +64,12 @@ public class UserAPI {
         FriendsController fc = new FriendsController();
         fc.removeFriend(username, friendName);
         return ResponseEntity.ok("Friend removed");
+    }
+
+    @GetMapping("/has-unread")
+    public ResponseEntity<Boolean> hasUnreadMessages(@RequestParam String username) {
+        MessageController mc = new MessageController();
+        return ResponseEntity.ok(!mc.getUnreadReceivedMessages(username).isEmpty());
     }
 
     @ExceptionHandler(Exception.class)

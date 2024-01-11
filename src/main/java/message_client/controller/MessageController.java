@@ -37,4 +37,8 @@ public class MessageController extends Listenable {
         messages.sort(Comparator.comparing(Message::createdAt));
         return messages;
     }
+
+    public boolean hasNewMessages() {
+        return apiController.hasNewMessages(UserController.getUsername());
+    }
 }

@@ -105,4 +105,13 @@ public class APIController {
     public List<Message> getSentMessages(String username) {
         return getMessages(username, "sent");
     }
+
+    public boolean hasNewMessages(String username) {
+        try {
+            return Boolean.parseBoolean(httpConnectionController.get("/user/has-unread" + "?username=" + username));
+        } catch (Exception ignored) {
+            // assuming response is well-formed
+        }
+        return false;
+    }
 }
