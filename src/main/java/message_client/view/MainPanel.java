@@ -10,6 +10,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.util.List;
 
+/**
+ * Panel for the main screen.
+ */
 public class MainPanel extends JPanel {
 
     private JPanel MainPanel;
@@ -23,6 +26,12 @@ public class MainPanel extends JPanel {
     private final MessageController mc;
     private final APIController ac;
 
+    /**
+     * Constructor for the MainPanel.
+     * @param uc UserController to get the friends from.
+     * @param mc MessageController to get the messages from.
+     * @param ac APIController to send messages with.
+     */
     public MainPanel(UserController uc, MessageController mc, APIController ac) {
         this.uc = uc;
         uc.addListener(new Listener() {
@@ -46,6 +55,9 @@ public class MainPanel extends JPanel {
         updateMessagePane();
     }
 
+    /**
+     * Create GUI components.
+     */
     private void createGUIComponents() {
         FriendsTableModel model = new FriendsTableModel(uc);
         friendsTable.setModel(model);
@@ -64,6 +76,9 @@ public class MainPanel extends JPanel {
         messageField.addActionListener(e -> sendMessage());
     }
 
+    /**
+     * Send a message to the selected friend.
+     */
     private void sendMessage() {
         String friendName = getSelectedFriend();
         if (friendName != null) {
@@ -74,6 +89,9 @@ public class MainPanel extends JPanel {
         }
     }
 
+    /**
+     * Update the message pane with new messages.
+     */
     private void updateMessagePane() {
         String friendName = getSelectedFriend();
         if (friendName == null) {
@@ -96,6 +114,10 @@ public class MainPanel extends JPanel {
         messagePanel.revalidate();
     }
 
+    /**
+     * Get the selected friend from the friends table.
+     * @return Selected friend.
+     */
     private String getSelectedFriend() {
         int selectedRow = friendsTable.getSelectedRow();
         if (selectedRow >= 0) {

@@ -7,6 +7,9 @@ import org.json.JSONException;
 
 import java.util.Scanner;
 
+/**
+ * Main class for the CLI message client.
+ */
 public class MessageClient {
     public static void main(String[] args) {
         var uc = new UserController();
@@ -20,7 +23,8 @@ public class MessageClient {
             System.exit(1);
         }
 
-        // TODO Command pattern
+        // This could be command pattern, but it's not worth the effort for a CLI
+        // Trying to keep this simple
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();

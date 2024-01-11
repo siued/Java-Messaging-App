@@ -4,25 +4,21 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Panel for the login/register screen.
+ */
 public class LoginRegisterPanel extends JPanel {
+    /**
+     * Constructor for the LoginRegisterPanel.
+     */
     public LoginRegisterPanel() {
         JButton loginButton = new JButton("Login");
         add(loginButton);
         JButton registerButton = new JButton("Register");
         add(registerButton);
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainFrame.getInstance().showLoginScreen();
-            }
-        });
+        loginButton.addActionListener(e -> MainFrame.getInstance().showLoginScreen());
 
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MainFrame.getInstance().showRegisterScreen();
-            }
-        });
+        registerButton.addActionListener(e -> MainFrame.getInstance().showRegisterScreen());
     }
 }

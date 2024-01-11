@@ -54,7 +54,6 @@ public class UserController extends Listenable {
      * Register a new user.
      * @param username Username of the new user.
      * @param password Password of the new user.
-     * @throws JSONException
      */
     public void registerUser(String username, String password) {
         JSONObject requestBody = new JSONObject();

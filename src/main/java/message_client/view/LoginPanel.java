@@ -7,6 +7,9 @@ import message_client.controller.UserController;
 import javax.swing.*;
 import java.util.Arrays;
 
+/**
+ * Panel for the login screen.
+ */
 public class LoginPanel extends JPanel {
     private JTextField textField1;
     private JPasswordField passwordField1;
@@ -16,6 +19,12 @@ public class LoginPanel extends JPanel {
     private final MessageController mc;
     private final APIController ac;
 
+    /**
+     * Constructor for the LoginPanel.
+     * @param uc UserController to log in with.
+     * @param mc MessageController to log in with.
+     * @param ac APIController to log in with.
+     */
     public LoginPanel(UserController uc, MessageController mc, APIController ac) {
         this.uc = uc;
         this.mc = mc;
@@ -26,6 +35,9 @@ public class LoginPanel extends JPanel {
         passwordField1.addActionListener(e -> loginUser());
     }
 
+    /**
+     * Attempt to log in the user.
+     */
     private void loginUser() {
         uc.loginUser(textField1.getText(), Arrays.toString(passwordField1.getPassword()));
     }
