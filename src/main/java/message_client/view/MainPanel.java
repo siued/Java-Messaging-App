@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class MainPanel extends JPanel implements Listener {
+public class MainPanel extends JPanel {
 
     private JPanel MainPanel;
     private JTable friendsTable;
@@ -26,7 +26,12 @@ public class MainPanel extends JPanel implements Listener {
 
     public MainPanel(UserController uc, MessageController mc, APIController ac) {
         this.uc = uc;
-        uc.addListener(this);
+        uc.addListener(new Listener() {
+            @Override
+            public void update() {
+                updateMessagePane();
+            }
+        });
         this.mc = mc;
         this.ac = ac;
         add(MainPanel);
@@ -52,18 +57,23 @@ public class MainPanel extends JPanel implements Listener {
             updateMessagePane();
         });
 
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String friendName = getSelectedFriend();
-                if (friendName != null) {
-                    String message = messageField.getText();
-                    ac.sendMessage(UserController.getUsername(), friendName, message);
-                    messageField.setText("");
-                    updateMessagePane();
-                }
-            }
+        sendButton.addActionListener(e -> {
+            sendMessage();
         });
+
+        messageField.addActionListener(e -> {
+            sendMessage();
+        });
+    }
+
+    private void sendMessage() {
+        String friendName = getSelectedFriend();
+        if (friendName != null) {
+            String message = messageField.getText();
+            ac.sendMessage(UserController.getUsername(), friendName, message);
+            messageField.setText("");
+            updateMessagePane();
+        }
     }
 
     private void updateMessagePane() {
@@ -74,7 +84,6 @@ public class MainPanel extends JPanel implements Listener {
         JPanel messagePanel = new JPanel();
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
         List<Message> messages = mc.getMessagesTo(friendName);
-        System.out.println("Messages: " + messages);
         for (Message message : messages) {
             JLabel label = new JLabel(message.body());
             if (message.sender().equals(friendName)) {
@@ -97,10 +106,5 @@ public class MainPanel extends JPanel implements Listener {
             return (String) friendsTable.getValueAt(0, selectedColumn);
         }
         return null;
-    }
-
-    @Override
-    public void update() {
-        updateMessagePane();
     }
 }

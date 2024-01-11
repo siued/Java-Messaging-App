@@ -7,7 +7,7 @@ import message_client.observer_pattern.Listener;
 
 import javax.swing.*;
 
-public class MainFrame extends JFrame implements Listener {
+public class MainFrame extends JFrame {
     private static MainFrame instance = null;
     private final UserController uc = new UserController();
     private final MessageController mc = new MessageController();
@@ -23,9 +23,22 @@ public class MainFrame extends JFrame implements Listener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         showLoginRegisterScreen();
 
-        uc.addListener(this);
-        mc.addListener(this);
-        ac.addListener(this);
+        uc.addListener(new Listener() {
+            @Override
+            public void update() {
+                if (uc.isLoggedIn()) {
+                    showMainScreen();
+                } else {
+                    showLoginScreen();
+                }
+            }
+        });
+        mc.addListener(new Listener() {
+            @Override
+            public void update() {
+                // TODO handle incoming messages
+            }
+        });
     }
 
     public void showLoginRegisterScreen() {
@@ -72,18 +85,6 @@ public class MainFrame extends JFrame implements Listener {
         setSize(500, 500);
     }
 
-    @Override
-    public void update() {
-        // TODO handle new messages
-        if (uc.isLoggedIn()) {
-            showMainScreen();
-        } else {
-            showLoginScreen();
-        }
-        pack();
-        repaint();
-    }
-
     public static MainFrame getInstance() {
         if (instance == null) {
             instance = new MainFrame();
@@ -92,6 +93,6 @@ public class MainFrame extends JFrame implements Listener {
     }
 
     public static void main(String[] args) {
-        MainFrame mainFrame = MainFrame.getInstance();
+        MainFrame.getInstance();
     }
 }

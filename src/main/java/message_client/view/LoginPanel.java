@@ -26,8 +26,19 @@ public class LoginPanel extends JPanel {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                uc.loginUser(textField1.getText(), Arrays.toString(passwordField1.getPassword()));
+                loginUser();
             }
         });
+
+        passwordField1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginUser();
+            }
+        });
+    }
+
+    private void loginUser() {
+        uc.loginUser(textField1.getText(), Arrays.toString(passwordField1.getPassword()));
     }
 }

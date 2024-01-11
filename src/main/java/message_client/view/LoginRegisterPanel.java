@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginRegisterPanel extends JPanel {
-    private final JButton loginButton = new JButton("Login");
-    private final JButton registerButton = new JButton("Register");
     public LoginRegisterPanel() {
+        JButton loginButton = new JButton("Login");
         add(loginButton);
+        JButton registerButton = new JButton("Register");
         add(registerButton);
 
         loginButton.addActionListener(new ActionListener() {

@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class MessageController implements Listenable {
+public class MessageController extends Listenable {
     private final APIController apiController = new APIController();
-    private final List<Listener> listeners = new ArrayList<>();
 
     public void sendMessage(String recipientId, String body) {
         apiController.sendMessage(UserController.getUsername(), recipientId, body);
@@ -37,15 +36,5 @@ public class MessageController implements Listenable {
 
         messages.sort(Comparator.comparing(Message::createdAt));
         return messages;
-    }
-
-    public void addListener(Listener listener) {
-        listeners.add(listener);
-    }
-
-    public void update() {
-        for (Listener listener : listeners) {
-            listener.update();
-        }
     }
 }

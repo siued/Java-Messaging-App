@@ -6,13 +6,19 @@ import message_client.observer_pattern.Listener;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class FriendsTableModel extends AbstractTableModel implements Listener {
+public class FriendsTableModel extends AbstractTableModel {
     private List<String> friends;
     private final UserController uc;
 
     public FriendsTableModel(UserController uc) {
         this.uc = uc;
-        uc.addListener(this);
+        uc.addListener(new Listener() {
+            @Override
+            public void update() {
+                friends = uc.getFriends();
+                fireTableStructureChanged();
+            }
+        });
         this.friends = uc.getFriends();
     }
 
@@ -29,11 +35,5 @@ public class FriendsTableModel extends AbstractTableModel implements Listener {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return friends.get(columnIndex);
-    }
-
-    @Override
-    public void update() {
-        this.friends = uc.getFriends();
-        fireTableStructureChanged();
     }
 }

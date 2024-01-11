@@ -1,5 +1,5 @@
 package message_client.observer_pattern;
 
-public interface Listener {
-    abstract void update();
+public abstract class Listener {
+    public abstract void update();
 }

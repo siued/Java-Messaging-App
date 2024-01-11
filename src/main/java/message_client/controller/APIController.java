@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class APIController implements Listenable {
+public class APIController {
     private final HTTPConnectionController httpConnectionController = new HTTPConnectionController();
-    private final List<Listener> listeners = new ArrayList<>();
 
     public boolean checkConnection() {
-        this.update();
         return httpConnectionController.checkConnection();
     }
 
@@ -106,15 +104,5 @@ public class APIController implements Listenable {
 
     public List<Message> getSentMessages(String username) {
         return getMessages(username, "sent");
-    }
-
-    public void addListener(Listener listener) {
-        listeners.add(listener);
-    }
-
-    public void update() {
-        for (Listener listener : listeners) {
-            listener.update();
-        }
     }
 }
