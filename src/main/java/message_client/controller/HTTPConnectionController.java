@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HTTPConnectionController {
-    private static final String BASE_URL = "http://34.23.14.42:8081";
+    private static final String BASE_URL = "http://34.148.224.88:8081";
     private final Logger LOGGER = Logger.getLogger(HTTPConnectionController.class.getName());
 
     public HTTPConnectionController() {

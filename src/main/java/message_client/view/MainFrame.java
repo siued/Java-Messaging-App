@@ -20,7 +20,6 @@ public class MainFrame extends JFrame {
     private final LoginRegisterPanel loginRegisterPanel = new LoginRegisterPanel();
 
     private MainFrame() {
-        super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         showLoginRegisterScreen();
 

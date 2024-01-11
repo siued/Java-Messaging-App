@@ -18,6 +18,7 @@ public class MainPanel extends JPanel {
     private JScrollPane friendsPane;
     private JTextField messageField;
     private JButton sendButton;
+    private JPanel messagePanel;
     private final UserController uc;
     private final MessageController mc;
     private final APIController ac;
@@ -43,13 +44,14 @@ public class MainPanel extends JPanel {
         FriendsTableModel model = new FriendsTableModel(uc);
         friendsTable.setModel(model);
         model.addTableModelListener(e -> updateMessagePane());
-        ListSelectionModel cellSelectionModel = friendsTable.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        friendsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        friendsTable.getSelectionModel().addListSelectionListener(e -> updateMessagePane());
         friendsTable.setColumnSelectionAllowed(true);
         friendsTable.setTableHeader(null);
-        friendsPane.doLayout();
 
-        cellSelectionModel.addListSelectionListener(e -> updateMessagePane());
+        messagePanel = new JPanel();
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+        messagePane.setViewportView(messagePanel);
 
         sendButton.addActionListener(e -> sendMessage());
 
@@ -71,11 +73,11 @@ public class MainPanel extends JPanel {
         if (friendName == null) {
             return;
         }
-        JPanel messagePanel = new JPanel();
-        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+        messagePanel.removeAll();
         List<Message> messages = mc.getMessagesTo(friendName);
         for (Message message : messages) {
             JLabel label = new JLabel(message.body());
+            // TODO fix
             if (message.sender().equals(friendName)) {
                 label.setHorizontalAlignment(SwingConstants.LEFT);
             } else {
@@ -84,16 +86,14 @@ public class MainPanel extends JPanel {
             Border border = BorderFactory.createLineBorder(message.sender().equals(friendName) ? java.awt.Color.BLUE : java.awt.Color.RED, 2);
             label.setBorder(border);
             messagePanel.add(label);
-            messagePane.setViewportView(messagePanel);
         }
-        messagePane.revalidate();
-        messagePane.repaint();
+        messagePanel.revalidate();
     }
 
     private String getSelectedFriend() {
-        int selectedColumn = friendsTable.getSelectedColumn();
-        if (selectedColumn >= 0) {
-            return (String) friendsTable.getValueAt(0, selectedColumn);
+        int selectedRow = friendsTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            return (String) friendsTable.getValueAt(selectedRow, 0);
         }
         return null;
     }

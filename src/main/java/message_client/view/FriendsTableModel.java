@@ -24,17 +24,18 @@ public class FriendsTableModel extends AbstractTableModel {
     }
 
     @Override
-    public int getRowCount() {
+    public int getColumnCount() {
         return 1;
     }
 
     @Override
-    public int getColumnCount() {
+    public int getRowCount() {
+        if (friends == null) return 0;
         return friends.size();
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return friends.get(columnIndex);
+        return friends.get(rowIndex);
     }
 }
