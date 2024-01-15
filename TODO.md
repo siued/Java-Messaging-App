@@ -14,10 +14,10 @@
 
 ## Frontend
 ### Java Swing
-- [ ] Create a basic GUI
-- [ ] Implement a login screen
-- [ ] Implement a registration screen
-- [ ] Implement a chat screen
+- [x] Create a basic GUI
+- [x] Implement a login screen
+- [x] Implement a registration screen
+- [x] Implement a chat screen
 - [x] Get the API connection working
 
 ### Web
