@@ -1,4 +1,4 @@
-package message_client.view;
+package message_client.view.main_panel;
 
 import message_client.controller.APIController;
 import message_client.controller.MessageController;
@@ -8,6 +8,7 @@ import model.Message;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class MainPanel extends JPanel {
      * @param mc MessageController to get the messages from.
      * @param ac APIController to send messages with.
      */
-    public MainPanel(UserController uc, MessageController mc, APIController ac) {
+    public MainPanel(UserController uc, MessageController mc, APIController ac, JFrame frame) {
         this.uc = uc;
         uc.addListener(new Listener() {
             @Override
@@ -48,17 +49,18 @@ public class MainPanel extends JPanel {
         });
         this.mc = mc;
         this.ac = ac;
-        add(MainPanel);
-        setVisible(true);
+        this.add(MainPanel);
+        this.setVisible(true);
 
-        createGUIComponents();
+        createGUIComponents(frame.getWidth(), frame.getHeight());
         updateMessagePane();
     }
 
     /**
      * Create GUI components.
      */
-    private void createGUIComponents() {
+    private void createGUIComponents(int width, int height) {
+        height = height * 5 / 6;
         FriendsTableModel model = new FriendsTableModel(uc);
         friendsTable.setModel(model);
         model.addTableModelListener(e -> updateMessagePane());
@@ -66,10 +68,12 @@ public class MainPanel extends JPanel {
         friendsTable.getSelectionModel().addListSelectionListener(e -> updateMessagePane());
         friendsTable.setColumnSelectionAllowed(true);
         friendsTable.setTableHeader(null);
+        friendsTable.setPreferredScrollableViewportSize(new Dimension(width / 5, height));
 
         messagePanel = new JPanel();
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
         messagePane.setViewportView(messagePanel);
+        messagePane.setPreferredSize(new Dimension(width * 3 / 5, height));
 
         sendButton.addActionListener(e -> sendMessage());
 
@@ -109,9 +113,21 @@ public class MainPanel extends JPanel {
             }
             Border border = BorderFactory.createLineBorder(message.sender().equals(friendName) ? java.awt.Color.BLUE : java.awt.Color.RED, 2);
             label.setBorder(border);
-            messagePanel.add(label);
+
+            Box box = Box.createHorizontalBox();
+            if (message.sender().equals(friendName)) {
+                box.add(Box.createRigidArea(new Dimension(0, 0))); // Rigid area on the left
+                box.add(label);
+                box.add(Box.createHorizontalGlue()); // Glue on the right
+            } else {
+                box.add(Box.createHorizontalGlue()); // Glue on the left
+                box.add(label);
+                box.add(Box.createRigidArea(new Dimension(0, 0))); // Rigid area on the right
+            }
+            messagePanel.add(box);
         }
         messagePanel.revalidate();
+        messagePanel.repaint();
     }
 
     /**

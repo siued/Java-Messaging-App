@@ -1,17 +1,20 @@
 package message_client.controller;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.Config;
 
 /**
  * Controller for HTTP connections.
@@ -19,13 +22,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class HTTPConnectionController {
     // Server URL
-    private static final String BASE_URL = "http://34.148.224.88:8081";
+    private static String BASE_URL = null;
     private final Logger LOGGER = Logger.getLogger(HTTPConnectionController.class.getName());
 
     /**
      * Constructor for the HTTPConnectionController.
      */
     public HTTPConnectionController() {
+        try {
+            BASE_URL = new ObjectMapper().readValue(new File("src/main/resources/config.json"), Config.class).getServerUrl();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         ConsoleHandler handler = new ConsoleHandler();
         LOGGER.addHandler(handler);
         LOGGER.setLevel(Level.ALL);
@@ -41,6 +49,7 @@ public class HTTPConnectionController {
             url.openConnection().connect();
             return true;
         } catch (Exception ignored) {
+            System.out.println("Could not connect to server");
         }
         return false;
     }

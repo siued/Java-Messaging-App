@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * Main class for the CLI message client.
  */
-public class MessageClient {
+public class MessageClientCLI {
     public static void main(String[] args) {
         var uc = new UserController();
         var mc = new MessageController();

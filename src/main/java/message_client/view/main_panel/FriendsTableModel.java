@@ -1,4 +1,4 @@
-package message_client.view;
+package message_client.view.main_panel;
 
 import message_client.controller.UserController;
 import message_client.observer_pattern.Listener;

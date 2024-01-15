@@ -6,11 +6,14 @@ It is currently a work in progress, but I am planning to keep working on it to s
 ## Running the app
 
 ### GUI
-The GUI version is missing some features at the moment like the ability to add friends, but it is fully functional otherwise. To run the GUI version, run the ```message_client.view.MainFrame``` class. The GUI is written in Java Swing. I am not a designer, so it is very ugly. Sorry about that :). 
+The Swing GUI is functional to send and receive messages using this service. To run the GUI version, run the ```message_client.MessageClientGUI``` class. The GUI is written in Java Swing. I am not a designer, so it is very ugly. Sorry about that :). 
 
 ### Command-line version
-The app was written in Java 20.0, so compatibility with lower Java version is not guaranteed. To run the application, simply run the ```message_client.MessageClient``` class. The command-line interface will let you interact with the app. For a list of commands, type 'help'. 
+The app was written in Java 20.0, so compatibility with lower Java version is not guaranteed. To run the application, simply run the ```message_client.MessageClientCLI``` class. The command-line interface will let you interact with the app. For a list of commands, type 'help'. 
 This interface is quite crude, but it has full functionality and allows one to use the messaging service. 
+
+## Backend
+The message server code can be found in the group.message_server package. The server is a Spring Boot application that uses a MongoDB database to store messages and users. The server is currently hosted on a Google Cloud VM since 
 
 ## Database schema
 ![Database schema](db_diagram.png)

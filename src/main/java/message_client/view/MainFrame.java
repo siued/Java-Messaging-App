@@ -5,6 +5,7 @@ import message_client.controller.MessageController;
 import message_client.controller.MessageUpdateController;
 import message_client.controller.UserController;
 import message_client.observer_pattern.Listener;
+import message_client.view.main_panel.MainPanel;
 
 import javax.swing.*;
 
@@ -18,7 +19,7 @@ public class MainFrame extends JFrame {
     private final APIController ac = new APIController();
     private final LoginPanel loginPanel = new LoginPanel(uc, mc, ac);
     private final RegisterPanel registerPanel = new RegisterPanel(uc, mc, ac);
-    private final MainPanel mainPanel = new MainPanel(uc, mc, ac);
+    private final MainPanel mainPanel;
     private final LoginRegisterPanel loginRegisterPanel = new LoginRegisterPanel();
 
     /**
@@ -27,6 +28,7 @@ public class MainFrame extends JFrame {
     private MainFrame() {
         initFrame();
         startBackgroundTasks();
+        mainPanel = new MainPanel(uc, mc, ac, this);
     }
 
     /**
@@ -118,15 +120,5 @@ public class MainFrame extends JFrame {
             instance = new MainFrame();
         }
         return instance;
-    }
-
-    /**
-     * Main method. Starts the application by
-     * instantiating a MainFrame object.
-     *
-     * @param args input arguments
-     */
-    public static void main(String[] args) {
-        MainFrame.getInstance();
     }
 }
