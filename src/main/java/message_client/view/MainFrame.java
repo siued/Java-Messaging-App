@@ -17,8 +17,8 @@ public class MainFrame extends JFrame {
     private final UserController uc = new UserController();
     private final MessageController mc = new MessageController();
     private final APIController ac = new APIController();
-    private final LoginPanel loginPanel = new LoginPanel(uc, mc, ac);
-    private final RegisterPanel registerPanel = new RegisterPanel(uc, mc, ac);
+    private final LoginPanel loginPanel = new LoginPanel(uc);
+    private final RegisterPanel registerPanel = new RegisterPanel(uc);
     private final MainPanel mainPanel;
     private final LoginRegisterPanel loginRegisterPanel = new LoginRegisterPanel();
 

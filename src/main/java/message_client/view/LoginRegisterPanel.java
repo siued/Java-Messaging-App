@@ -1,8 +1,6 @@
 package message_client.view;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Panel for the login/register screen.

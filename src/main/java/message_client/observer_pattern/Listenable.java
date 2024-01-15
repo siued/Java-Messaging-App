@@ -15,7 +15,7 @@ public class Listenable {
      */
     public void addListener(Listener listener) {
         listeners.add(listener);
-    };
+    }
 
     /**
      * Update all listeners.
@@ -24,5 +24,5 @@ public class Listenable {
         for (Listener listener : listeners) {
             listener.update();
         }
-    };
+    }
 }

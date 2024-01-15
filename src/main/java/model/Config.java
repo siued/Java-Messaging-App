@@ -2,7 +2,7 @@ package model;
 
 import lombok.Getter;
 
+@Getter
 public class Config {
-    @Getter
     String serverUrl;
 }

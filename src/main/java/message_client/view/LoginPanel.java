@@ -1,7 +1,5 @@
 package message_client.view;
 
-import message_client.controller.APIController;
-import message_client.controller.MessageController;
 import message_client.controller.UserController;
 
 import javax.swing.*;
@@ -16,19 +14,14 @@ public class LoginPanel extends JPanel {
     private JButton loginButton;
     private JPanel LoginPanel;
     private final UserController uc;
-    private final MessageController mc;
-    private final APIController ac;
 
     /**
      * Constructor for the LoginPanel.
+     *
      * @param uc UserController to log in with.
-     * @param mc MessageController to log in with.
-     * @param ac APIController to log in with.
      */
-    public LoginPanel(UserController uc, MessageController mc, APIController ac) {
+    public LoginPanel(UserController uc) {
         this.uc = uc;
-        this.mc = mc;
-        this.ac = ac;
         add(LoginPanel);
         loginButton.addActionListener(e -> loginUser());
 

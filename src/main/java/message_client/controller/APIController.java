@@ -1,7 +1,5 @@
 package message_client.controller;
 
-import message_client.observer_pattern.Listenable;
-import message_client.observer_pattern.Listener;
 import model.Message;
 import model.UserCredentials;
 import org.json.JSONArray;

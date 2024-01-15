@@ -3,13 +3,10 @@ package group.message_server.controller.database;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.InsertOneResult;
 import model.FriendRecord;
-import model.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.ArrayList;
 import java.util.List;

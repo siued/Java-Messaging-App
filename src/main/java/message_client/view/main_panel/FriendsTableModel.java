@@ -11,14 +11,12 @@ import java.util.List;
  */
 public class FriendsTableModel extends AbstractTableModel {
     private List<String> friends;
-    private final UserController uc;
 
     /**
      * Constructor for the FriendsTableModel.
      * @param uc UserController to get the friends from.
      */
     public FriendsTableModel(UserController uc) {
-        this.uc = uc;
         this.friends = uc.getFriends();
 
         uc.addListener(new Listener() {

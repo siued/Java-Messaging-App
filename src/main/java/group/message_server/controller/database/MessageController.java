@@ -120,10 +120,6 @@ public class MessageController {
         } else {
             filter = Filters.eq("recipient", recipient);
         }
-        // TODO figure out a good way to set deliveredAt field
-//        Bson update = Updates.set("deliveredAt", new Date());
-//
-//        databaseController.getDatabase().getCollection(MESSAGES_COLLECTION_NAME).updateMany(filter, update);
 
         return databaseController.getDatabase()
                 .getCollection(MESSAGES_COLLECTION_NAME)

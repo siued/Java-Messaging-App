@@ -2,9 +2,7 @@ package group.message_server.controller.api;
 
 import group.message_server.controller.database.FriendsController;
 import group.message_server.controller.database.MessageController;
-import group.message_server.controller.database.UserController;
 import model.Message;
-import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
